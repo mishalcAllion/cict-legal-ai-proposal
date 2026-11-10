@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>CICT Assistant Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: app shell. Sidebar groups screens by delivery phase; a top bar carries the phase and language switches; the work area holds cards, tables and the six-step review flow. */
+:root {
+  --bg: #eef2f4;
+  --surface: #fbfcfc;
+  --surface-2: #f3f6f7;
+  --ink: #12202a;
+  --ink-2: #44535f;
+  --muted: #5f6c77;
+  --line: #d6dde2;
+  --accent: #0e5d78;
+  --accent-ink: #ffffff;
+  --accent-soft: #e0edf2;
+  --p2: #8a5410;
+  --p2-soft: #f5ead9;
+  --good: #13795b;
+  --good-soft: #e2f3ec;
+  --warn: #8f5b00;
+  --warn-soft: #fbefd6;
+  --bad: #b42318;
+  --bad-soft: #fbe4e2;
+  --mark: #fff0b3;
+  --ph: #d7e9f0;
+  --bar-bg: #10303d;
+  --bar-ink: #e6f0f3;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1216; --surface: #131d23; --surface-2: #18242b; --ink: #e4ebee; --ink-2: #a8b5bd; --muted: #8796a0; --line: #26343d;
+    --accent: #63b4d2; --accent-ink: #06151b; --accent-soft: #15303b; --p2: #dba55c; --p2-soft: #33260f;
+    --good: #4cc38a; --good-soft: #12302a; --warn: #e0a43a; --warn-soft: #33270f; --bad: #f0706a; --bad-soft: #3a1714;
+    --mark: #4a3d10; --ph: #173540; --bar-bg: #0f242d; --bar-ink: #e4ebee;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1216; --surface: #131d23; --surface-2: #18242b; --ink: #e4ebee; --ink-2: #a8b5bd; --muted: #8796a0; --line: #26343d;
+  --accent: #63b4d2; --accent-ink: #06151b; --accent-soft: #15303b; --p2: #dba55c; --p2-soft: #33260f;
+  --good: #4cc38a; --good-soft: #12302a; --warn: #e0a43a; --warn-soft: #33270f; --bad: #f0706a; --bad-soft: #3a1714;
+  --mark: #4a3d10; --ph: #173540; --bar-bg: #0f242d; --bar-ink: #e4ebee;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+a { color: var(--accent); text-underline-offset: 2px; }
+button, select, textarea, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) { .fade { animation: fade 0.18s ease-out; } }
+@keyframes fade { from { opacity: 0.4; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+.mockbar { background: var(--bar-bg); color: var(--bar-ink); font-size: 0.8rem; }
+.mockbar div { max-width: 1440px; margin: 0 auto; padding-block: 7px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.mockbar b { font-weight: 600; }
+
+.app {
+  max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 24px;
+  padding-block: 18px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (max-width: 900px) { .app { grid-template-columns: minmax(0, 1fr); gap: 14px; } }
+
+/* Sidebar */
+.side { min-width: 0; }
+.side-in { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 18px); display: grid; gap: 18px; }
+.brand { display: grid; gap: 2px; }
+.brand b { font-family: var(--font-display); font-stretch: 85%; font-weight: 760; font-size: 1.15rem; line-height: 1.15; }
+.brand span { font-size: 0.78rem; color: var(--muted); }
+.navgroup { display: grid; gap: 2px; }
+.navgroup h2 { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.navgroup h2 i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.navgroup.p2 h2 i { background: var(--p2); }
+.nav-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 10px; border-radius: var(--radius); color: var(--ink); text-decoration: none; font-size: 0.93rem; border-left: 3px solid transparent; }
+.nav-item:hover { background: var(--surface); }
+.nav-item[aria-current="page"] { background: var(--surface); border-left-color: var(--accent); font-weight: 600; }
+.navgroup.p2 .nav-item[aria-current="page"] { border-left-color: var(--p2); }
+.nav-item.off { color: var(--muted); }
+.lock { font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--p2); white-space: nowrap; }
+.side-note { font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+@media (max-width: 900px) {
+  .side-in { position: static; gap: 10px; }
+  .navs { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 4px; }
+  .navgroup { display: flex; gap: 4px; align-items: center; flex: none; }
+  .navgroup h2 { margin: 0 4px 0 0; white-space: nowrap; }
+  .nav-item { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; border-radius: 4px 4px 0 0; }
+  .nav-item[aria-current="page"] { border-bottom-color: var(--accent); }
+  .navgroup.p2 .nav-item[aria-current="page"] { border-bottom-color: var(--p2); }
+  .side-note { display: none; }
+}
+
+/* Top bar */
+.main { min-width: 0; display: grid; gap: 18px; align-content: start; }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.seg { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); padding: 2px; }
+.seg-l { font-size: 0.75rem; color: var(--muted); padding: 0 6px 0 10px; }
+.seg button { border: 0; background: transparent; padding: 4px 11px; border-radius: 999px; font-size: 0.85rem; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.user { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+.user small { display: block; color: var(--muted); font-size: 0.74rem; line-height: 1.1; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 0.78rem; }
+.crumb { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+
+/* Page head */
+.view { display: grid; gap: 18px; min-width: 0; }
+.phead { display: grid; gap: 6px; }
+.phead-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+h1 { font-family: var(--font-display); font-stretch: 85%; font-weight: 760; font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2.h { font-family: var(--font-display); font-stretch: 88%; font-weight: 700; font-size: 1.15rem; margin: 0; line-height: 1.25; }
+h3 { font-size: 0.98rem; margin: 0; font-weight: 650; }
+p { margin: 0; }
+.phead p { color: var(--ink-2); max-width: 70ch; }
+.ref { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+.chip { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; background: var(--accent-soft); color: var(--accent); }
+.chip.p2 { background: var(--p2-soft); color: var(--p2); }
+.sample { font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border: 1px dashed var(--line); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+
+/* Building blocks */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 16px; align-items: start; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 12px; }
+.sub { color: var(--ink-2); font-size: 0.9rem; }
+.small { font-size: 0.82rem; color: var(--muted); }
+.mono { font-family: var(--font-mono); font-size: 0.82rem; }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 7px 14px; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; background: var(--surface-2); color: var(--ink-2); }
+.pill .i { font-size: 0.72rem; }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.info { background: var(--accent-soft); color: var(--accent); }
+.note { border-left: 4px solid var(--accent); background: var(--surface); border-radius: var(--radius); padding: 10px 14px; font-size: 0.9rem; color: var(--ink-2); border-top: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.note.warn { border-left-color: var(--warn); background: var(--warn-soft); color: var(--ink); }
+.note.bad { border-left-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.note.good { border-left-color: var(--good); background: var(--good-soft); color: var(--ink); }
+.note b { color: var(--ink); }
+
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs button { border: 0; background: transparent; padding: 8px 14px; font-size: 0.92rem; color: var(--ink-2); border-bottom: 3px solid transparent; white-space: nowrap; margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--ink); font-weight: 650; border-bottom-color: var(--accent); }
+
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+td .mono { white-space: nowrap; color: var(--accent); }
+td.nw { white-space: nowrap; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; }
+.list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); align-items: start; }
+.list li:first-child { border-top: 0; padding-top: 0; }
+.list .meta { font-size: 0.8rem; color: var(--muted); grid-column: 1; }
+.list a.row-link { color: var(--ink); text-decoration: none; font-weight: 600; }
+.list a.row-link:hover { color: var(--accent); text-decoration: underline; }
+
+.cite { display: inline-flex; font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); background: var(--accent-soft); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+
+/* Stepper */
+.stepper-wrap { overflow-x: auto; }
+.stepper { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(110px, 1fr)); gap: 6px; min-width: 700px; }
+.stepper button { width: 100%; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 8px 10px; display: grid; gap: 2px; font-size: 0.82rem; color: var(--ink-2); border-top: 3px solid var(--line); }
+.stepper .n { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.stepper li.done button { border-top-color: var(--good); color: var(--ink); }
+.stepper li.cur button { border-top-color: var(--accent); color: var(--ink); font-weight: 650; background: var(--accent-soft); }
+.stepper button[disabled] { cursor: default; opacity: 0.6; }
+
+.choice { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 10px; }
+.opt { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; background: var(--surface); text-align: left; display: grid; gap: 4px; align-content: start; }
+.opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.opt[disabled] { opacity: 0.5; cursor: not-allowed; }
+.opt b { font-size: 0.95rem; }
+.opt span { font-size: 0.82rem; color: var(--ink-2); }
+.opt .tagline { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.file { display: flex; gap: 12px; align-items: center; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; background: var(--surface-2); }
+.file .ic { width: 34px; height: 40px; border-radius: 4px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; flex: none; }
+textarea { width: 100%; min-height: 72px; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: var(--surface); resize: vertical; }
+input[type="search"], input[type="text"] { width: 100%; border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--surface); }
+select { border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; background: var(--surface); }
+
+.doc { font-family: Georgia, "Times New Roman", serif; font-size: 0.93rem; line-height: 1.65; display: grid; gap: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; min-width: 0; overflow-wrap: anywhere; }
+mark { background: var(--mark); color: var(--ink); border-radius: 3px; padding: 0 2px; }
+mark.ph { background: var(--ph); font-family: var(--font-mono); font-size: 0.82em; }
+mark.del { background: transparent; color: var(--muted); text-decoration: line-through; font-family: var(--font-mono); font-size: 0.8em; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 0.88rem; }
+.checks li { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 10px; align-items: start; }
+@media (max-width: 520px) { .checks li { grid-template-columns: 1fr; gap: 2px; } }
+
+.finding { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; border-left: 4px solid var(--warn); }
+.finding.bad { border-left-color: var(--bad); }
+.finding .fh { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.triad { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 4px 12px; font-size: 0.88rem; }
+.triad dt { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding-top: 2px; }
+.triad dd { margin: 0; }
+@media (max-width: 520px) { .triad { grid-template-columns: 1fr; } .triad dd { margin-bottom: 6px; } }
+details summary { cursor: pointer; font-size: 0.82rem; color: var(--accent); }
+details blockquote { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--line); font-family: Georgia, "Times New Roman", serif; font-size: 0.9rem; color: var(--ink-2); }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.timeline li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; padding-bottom: 14px; position: relative; }
+.timeline li::before { content: ""; position: absolute; left: 10px; top: 18px; bottom: 0; width: 2px; background: var(--line); }
+.timeline li:last-child::before { display: none; }
+.dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); display: grid; place-items: center; font-size: 0.7rem; color: var(--surface); z-index: 1; }
+.timeline li.done .dot { background: var(--good); border-color: var(--good); }
+.timeline li.cur .dot { border-color: var(--accent); background: var(--accent-soft); }
+
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 6px; border-top: 3px solid var(--good); }
+.tile.warn { border-top-color: var(--warn); }
+.tile.bad { border-top-color: var(--bad); }
+.tile b { font-size: 0.95rem; }
+.meter { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--line); }
+.meter span { display: block; height: 100%; background: var(--accent); }
+.meter span.warn { background: var(--warn); }
+
+.redline td { font-family: Georgia, "Times New Roman", serif; font-size: 0.9rem; }
+del { color: var(--bad); background: var(--bad-soft); text-decoration: line-through; }
+ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
+
+.aligned td.zh { font-size: 0.95rem; }
+.locked { background: var(--surface); border: 1px dashed var(--p2); border-radius: var(--radius); padding: 22px; display: grid; gap: 12px; max-width: 46rem; }
+.locked ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; color: var(--ink-2); }
+.walk { margin: 0; padding-left: 1.3rem; display: grid; gap: 6px; font-size: 0.9rem; }
+
+.toast { position: fixed; z-index: 20; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: var(--radius); font-size: 0.88rem; max-width: min(92vw, 34rem); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25); }
+</style>
+
+<div class="mockbar"><div><b>Concept mock for the CICT proposal</b><span>Allion Technologies · internal discussion draft</span><span>All names, documents and figures are made-up samples</span></div></div>
+<div class="app">
+  <aside class="side" id="side" aria-label="Screens"></aside>
+  <div class="main">
+    <header class="top" id="top"></header>
+    <main class="view" id="view"></main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var state = {
+    phase: "both",
+    route: "workspace",
+    tabs: {},
+    wiz: null
+  };
+  function freshWizard() {
+    return {
+      step: 1, max: 1, task: "contract", category: "sensitive", manual: false,
+      target: "external", approval: "none", review: "draft",
+      methods: { cict: "placeholder", ncs: "placeholder", cno: "placeholder", price: "range", bank: "placeholder", person: "placeholder", phone: "delete" },
+      prompt: "Review this agreement against the services contract checklist and list the risks, with clause references."
+    };
+  }
+  state.wiz = freshWizard();
+  try { var saved = localStorage.getItem("cict-mock-phase"); if (saved === "p1" || saved === "both") state.phase = saved; } catch (e) {}
+
+  var ROUTES = [
+    { id: "workspace", label: "My workspace", group: "platform", phase: 1, ref: "§3.7.2", desc: "Your pending reviews, deadlines and tasks across modules. Phase 2 items appear here once those modules go live." },
+    { id: "assistant", label: "Ask the assistant", group: "platform", phase: 1, ref: "Ch 1–2", desc: "The core flow every task follows: upload, classify, mask, approve, answer with sources, then a person confirms." },
+    { id: "knowledge", label: "Knowledge base", group: "platform", phase: 1, ref: "§2.2", desc: "Laws, headquarters and company policies, templates and checklists, with versions and effective dates." },
+    { id: "admin", label: "Administration", group: "platform", phase: 1, ref: "§2.4 §2.6 §3.7", desc: "Models, service health, audit logs, users and roles. Administrator view." },
+    { id: "contracts", label: "Contracts", group: "p1", phase: 1, ref: "§3.1", desc: "Contract register, counterparty due diligence and deadlines." },
+    { id: "records", label: "Records", group: "p1", phase: 1, ref: "§3.6", desc: "One archive linked to business matters. Ask questions, manage retention and import historical records." },
+    { id: "legal", label: "Legal affairs", group: "p2", phase: 2, ref: "§3.2", desc: "Cases and disputes, legal memos, translation and daily regulatory monitoring.",
+      lockList: ["Case and dispute register with risk analysis", "Draft legal memos with cited legal basis", "Chinese, English and Sinhala legal translation with a terminology base", "Daily checks of official Sri Lankan sources"] },
+    { id: "policy", label: "Policies", group: "p2", phase: 2, ref: "§3.3", desc: "Policy register, clause-by-clause comparison and checks against headquarters policies.",
+      lockList: ["Policy register from drafting to repeal", "Clause-by-clause comparison with the basis for each change", "Consistency checks against headquarters policies", "Review reminders and policy Q&A"] },
+    { id: "compliance", label: "Compliance and risk", group: "p2", phase: 2, ref: "§3.4", desc: "Sanctions screening, bribery-related anomaly checks, control testing and remediation.",
+      lockList: ["OFAC, EU and other approved list screening", "Contract-versus-payment anomaly checks", "Internal control testing and remediation tracking", "Approval checks for key positions"] },
+    { id: "board", label: "Board affairs", group: "p2", phase: 2, ref: "§3.5", desc: "Agenda submission checks, meeting document templates and search of past meetings.",
+      lockList: ["Agenda checks for approval authority, documents, related parties and completeness", "Meeting document templates", "Search of past board material"] }
+  ];
+  var GROUPS = [["platform", "Shared platform", "p1"], ["p1", "Phase 1 modules", "p1"], ["p2", "Phase 2 modules", "p2"]];
+  function routeById(id) { for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].id === id) return ROUTES[i]; return null; }
+
+  /* ---------- helpers ---------- */
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function chip(p) { return p === 2 ? '<span class="chip p2">Phase 2</span>' : '<span class="chip">Phase 1</span>'; }
+  var ICON = { good: "✓", warn: "!", bad: "✕", info: "●", neutral: "○" };
+  function pill(kind, text) { return '<span class="pill ' + kind + '"><span class="i" aria-hidden="true">' + ICON[kind] + "</span>" + text + "</span>"; }
+  function table(cols, rows, numCols) {
+    numCols = numCols || [];
+    return '<div class="scroll"><table><thead><tr>' + cols.map(function (c, i) { return '<th' + (numCols.indexOf(i) > -1 ? ' class="num"' : "") + ">" + c + "</th>"; }).join("") +
+      "</tr></thead><tbody>" + rows.map(function (r) { return "<tr>" + r.map(function (c, i) { return "<td" + (numCols.indexOf(i) > -1 ? ' class="num"' : "") + ">" + c + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
+  }
+  function tabs(page, list) {
+    var cur = state.tabs[page] || list[0][0];
+    return '<div class="tabs" role="tablist">' + list.map(function (t) {
+      return '<button role="tab" id="tab-' + page + "-" + t[0] + '" aria-selected="' + (t[0] === cur) + '" data-act="tab" data-page="' + page + '" data-v="' + t[0] + '">' + t[1] + "</button>";
+    }).join("") + "</div>";
+  }
+  function curTab(page, first) { return state.tabs[page] || first; }
+  function head(r, extra) {
+    return '<div class="phead"><div class="phead-top"><h1>' + r.label + "</h1>" + chip(r.phase) + '<span class="ref">' + r.ref + "</span>" + (extra || "") + "</div><p>" + r.desc + "</p></div>";
+  }
+  function m(id) { return '<span class="mono">' + id + "</span>"; }
+  function p2on() { return state.phase === "both"; }
+
+  /* ---------- shell ---------- */
+  function renderSide() {
+    var html = '<div class="side-in"><div class="brand"><b>Legal &amp; Compliance Assistant</b><span>Concept mock · sample data</span></div><nav class="navs" aria-label="Screens">';
+    GROUPS.forEach(function (g) {
+      html += '<div class="navgroup ' + g[2] + '"><h2><i aria-hidden="true"></i>' + g[1] + "</h2>";
+      ROUTES.filter(function (r) { return r.group === g[0]; }).forEach(function (r) {
+        var off = r.phase === 2 && !p2on();
+        html += '<a class="nav-item' + (off ? " off" : "") + '" href="#' + r.id + '"' + (state.route === r.id ? ' aria-current="page"' : "") + "><span>" + r.label + "</span>" + (off ? '<span class="lock">Phase 2</span>' : "") + "</a>";
+      });
+      html += "</div>";
+    });
+    html += '</nav><p class="side-note">Colour shows the delivery phase. The shared platform and Phase 1 modules are built first; Phase 2 modules run on the same platform.</p></div>';
+    return html;
+  }
+  function renderTop() {
+    var r = routeById(state.route);
+    var g = GROUPS.filter(function (x) { return x[0] === r.group; })[0];
+    return '<span class="crumb">' + g[1] + "</span>" +
+      '<div class="controls">' +
+      '<div class="seg" role="group" aria-label="Phases shown"><span class="seg-l">Showing</span>' +
+      '<button data-act="phase" data-v="p1" aria-pressed="' + (state.phase === "p1") + '">Phase 1</button>' +
+      '<button data-act="phase" data-v="both" aria-pressed="' + (state.phase === "both") + '">Phase 1 + 2</button></div>' +
+      '<div class="seg" role="group" aria-label="Interface language">' +
+      '<button data-act="lang" data-v="en" aria-pressed="true">EN</button><button data-act="lang" data-v="zh" aria-pressed="false" lang="zh">中文</button><button data-act="lang" data-v="si" aria-pressed="false" lang="si">සිංහල</button></div>' +
+      '<span class="user"><span class="avatar" aria-hidden="true">NP</span><span>N. Perera<small>Legal officer</small></span></span>' +
+      "</div>";
+  }
+
+  /* ---------- workspace ---------- */
+  var WORK = [
+    { p: 1, kind: "Review", text: "Contract review: crane maintenance agreement", meta: "Draft · waiting for review and confirmation", to: "assistant", s: ["info", "Draft"] },
+    { p: 1, kind: "Deadline", text: "Notice to renew CON-2024-051, Northwind Crane Services", meta: "Due 31 Dec 2026 · 51 days left", to: "contracts", s: ["warn", "51 days"] },
+    { p: 1, kind: "Deadline", text: "Payment milestone CON-2025-087, Coral Bay Marine Supplies", meta: "Due 20 Nov 2026", to: "contracts", s: ["warn", "10 days"] },
+    { p: 1, kind: "Task", text: "Fix 12 failed entries in records import IMP-0007", meta: "Password-protected or unreadable files", to: "records", s: ["neutral", "Open"] },
+    { p: 2, kind: "Deadline", text: "Hearing: CASE-2026-014, cargo damage claim", meta: "2 Dec 2026", to: "legal", s: ["warn", "22 days"] },
+    { p: 2, kind: "Review", text: "Policy draft: Gifts and hospitality v4", meta: "Consultation closes 18 Nov 2026", to: "policy", s: ["info", "In consultation"] },
+    { p: 2, kind: "Task", text: "Verify screening hit: Meridian Freight Lines", meta: "Possible match on a similar name", to: "compliance", s: ["bad", "Verify"] },
+    { p: 2, kind: "Task", text: "Agenda item 4 returned: crane contract renewal", meta: "Financial evaluation missing", to: "board", s: ["warn", "Returned"] }
+  ];
+  var NOTES = [
+    { p: 1, t: "10:41", text: "S. Silva (data owner) approved release of task TSK-2291 to an approved external model" },
+    { p: 1, t: "08:15", text: "Records import IMP-0007 finished: 1,204 imported, 12 need fixing, 31 duplicates linked" },
+    { p: 2, t: "06:30", text: "Daily regulatory check: 2 new updates, 1 source unreachable" },
+    { p: 2, t: "06:00", text: "Sanctions lists refreshed: OFAC and EU" }
+  ];
+  function pageWorkspace(r) {
+    var items = WORK.filter(function (w) { return w.p === 1 || p2on(); });
+    var notes = NOTES.filter(function (w) { return w.p === 1 || p2on(); });
+    var list = '<ul class="list">' + items.map(function (w) {
+      return '<li><a class="row-link" href="#' + w.to + '">' + w.text + "</a>" + pill(w.s[0], w.s[1]) + '<span class="meta">' + w.kind + " · " + w.meta + (w.p === 2 ? ' · <span class="chip p2">Phase 2</span>' : "") + "</span></li>";
+    }).join("") + "</ul>";
+    var hidden = WORK.length - items.length;
+    return head(r) +
+      '<div class="grid2">' +
+      '<section class="card"><div class="card-h"><h2 class="h">Needs your attention</h2><span class="small">' + items.length + " items · " + "as of 10 Nov 2026</span></div>" + list +
+      (hidden ? '<p class="note">' + hidden + " more items from cases, policies, screening and board affairs appear here when Phase 2 goes live. The records and workspace links for Phase 2 ship with those modules <span class=\"ref\">§3.8.1</span>.</p>" : "") + "</section>" +
+      '<div style="display:grid;gap:16px">' +
+      '<section class="card"><h2 class="h">Walk through this mock</h2><ol class="walk">' +
+      '<li><a href="#assistant">Ask the assistant</a>: the six-step flow every task follows. Start here.</li>' +
+      '<li><a href="#contracts">Contracts</a> and <a href="#records">Records</a>: the two Phase 1 modules.</li>' +
+      '<li><a href="#admin">Administration</a>: model choice, health, audit logs.</li>' +
+      '<li>Switch to <b>Phase 1 + 2</b> at the top, then open <a href="#legal">Legal affairs</a>, <a href="#policy">Policies</a>, <a href="#compliance">Compliance</a> and <a href="#board">Board affairs</a>.</li>' +
+      '</ol><div class="btns"><button class="btn primary" data-act="start">Start the review flow</button></div></section>' +
+      '<section class="card"><h2 class="h">Notifications</h2><ul class="list">' + notes.map(function (n) {
+        return "<li><span>" + n.text + '</span><span class="small mono">' + n.t + "</span></li>";
+      }).join("") + '</ul><p class="small">Notifications show a summary and a link only. Sensitive text never goes out by email or chat <span class="ref">§1.5</span>.</p></section>' +
+      "</div></div>";
+  }
+
+  /* ---------- assistant: the six-step flow ---------- */
+  var ENT = {
+    cict: { type: "Company name", text: "Colombo International Container Terminals Ltd", ph: "[PARTY-A]", n: 22 },
+    ncs: { type: "Company name", text: "Northwind Crane Services (Pvt) Ltd", ph: "[PARTY-B]", n: 14 },
+    cno: { type: "Contract number", text: "NCS/CICT/2024/051", ph: "[CONTRACT-1]", n: 3 },
+    price: { type: "Transaction price", text: "USD 1,480,000", ph: "[AMOUNT-1]", range: "USD 1-2 million", n: 2 },
+    bank: { type: "Bank account", text: "account 0081-2245-7710", ph: "[BANK-ACCOUNT-1]", n: 1 },
+    person: { type: "Personal name", text: "Ruwan Jayasinghe", ph: "[PERSON-1]", n: 3 },
+    phone: { type: "Contact details", text: "+94 11 000 1234", ph: "[PHONE-1]", n: 1 }
+  };
+  var DOC = [
+    ["Clause 1. Parties. This Agreement is made between ", "cict", ' ("the Company") and ', "ncs", ' ("the Contractor"), contract no. ', "cno", "."],
+    ["Clause 5. Contract price. The total price is ", "price", ", payable to ", "bank", "."],
+    ["Clause 7.2. Liability. The Contractor's total liability under this Agreement is capped at 10% of the contract price."],
+    ["Clause 14. Notices. Notices to the Contractor go to ", "person", " on ", "phone", "."],
+    ["Tracked change by ", "person", ': "Agreed to lower the cap from 100% to 10%."']
+  ];
+  function docHtml(masked) {
+    return DOC.map(function (para) {
+      return "<p>" + para.map(function (seg, i) {
+        if (i % 2 === 0) return esc(seg);
+        var e = ENT[seg];
+        if (!masked) return '<mark title="' + e.type + '">' + esc(e.text) + "</mark>";
+        var how = state.wiz.methods[seg];
+        if (how === "range") return '<mark class="ph">' + esc(e.range) + "</mark>";
+        if (how === "delete") return '<mark class="del">[removed]</mark>';
+        if (how === "mask") return '<mark class="ph">████████</mark>';
+        return '<mark class="ph">' + esc(e.ph) + "</mark>";
+      }).join("") + "</p>";
+    }).join("");
+  }
+  var STEPS = ["Ask or upload", "Classify", "Find and mask", "Route and approve", "Answer with sources", "Review and confirm"];
+  var CATS = [
+    ["public", "Public", "Published laws, public standards", "Public knowledge base"],
+    ["internal", "Internal", "Internal policies, routine registers", "Approved cloud, access by department"],
+    ["sensitive", "Sensitive", "Contract prices, customer and payment data, personal data", "Controlled environment, masked before wider use"],
+    ["confidential", "Confidential", "Strictly confidential material, major cases", "Only inside an environment that meets the rules"]
+  ];
+  function canNext(step) {
+    var w = state.wiz;
+    if (step === 3) return w.manual;
+    if (step === 4) {
+      if (w.target === "self") return true;
+      if (w.category === "confidential") return false;
+      if (w.category === "sensitive") return w.approval === "approved";
+      return true;
+    }
+    if (step === 6) return false;
+    return true;
+  }
+  function stepNav(step) {
+    var next = step < 6 ? '<button class="btn primary" data-act="next"' + (canNext(step) ? "" : " disabled") + ">Next: " + STEPS[step].toLowerCase() + "</button>" : "";
+    var back = step > 1 ? '<button class="btn" data-act="back">Back</button>' : "";
+    return '<div class="btns">' + back + next + '<span class="small">' + (step < 6 && !canNext(step) ? stepBlocker(step) : "") + "</span></div>";
+  }
+  function stepBlocker(step) {
+    var w = state.wiz;
+    if (step === 3) return "Confirm the manual check of the page 7 image first.";
+    if (step === 4) {
+      if (w.category === "confidential" && w.target === "external") return "Confidential material cannot leave the approved environment. Choose the self-hosted model.";
+      return "Waiting for the data owner's approval.";
+    }
+    return "";
+  }
+  function step1() {
+    var tasks = [
+      ["contract", "Review a contract", "Contracts", 1],
+      ["records", "Ask the records archive", "Records", 1],
+      ["memo", "Draft a legal memo", "Legal affairs", 2],
+      ["policy", "Check a policy against headquarters", "Policies", 2]
+    ];
+    return '<section class="card"><h2 class="h">What do you need?</h2><div class="choice">' + tasks.map(function (t) {
+      var off = t[3] === 2 && !p2on();
+      return '<button class="opt" data-act="task" data-v="' + t[0] + '" aria-pressed="' + (state.wiz.task === t[0]) + '"' + (off ? " disabled" : "") + '><span class="tagline">' + chip(t[3]) + "</span><b>" + t[1] + "</b><span>" + (off ? "Arrives in Phase 2" : t[2]) + "</span></button>";
+    }).join("") + "</div>" +
+      '<h3>Upload</h3><div class="file"><span class="ic" aria-hidden="true">DOCX</span><div><b>Crane maintenance agreement (sample).docx</b><div class="small">14 pages · Word · with 1 attachment (Schedule A) · uploaded by N. Perera</div></div></div>' +
+      '<label for="prompt"><h3>Your question</h3></label><textarea id="prompt" data-act="prompt">' + esc(state.wiz.prompt) + "</textarea>" +
+      '<div class="note"><b>File read.</b> 14 pages, 2 tables, 2 comments and 5 tracked changes found. One embedded image on page 7 could not be read; it is flagged for a manual check rather than skipped <span class="ref">§1.2</span>.</div>' +
+      stepNav(1) + "</section>";
+  }
+  function step2() {
+    return '<section class="card"><h2 class="h">Classify the material</h2><p class="sub">The assistant suggests a category from what it found. A business owner confirms it. The assistant never lowers a category on its own <span class="ref">§1.3</span>.</p><div class="choice">' +
+      CATS.map(function (c) {
+        return '<button class="opt" data-act="cat" data-v="' + c[0] + '" aria-pressed="' + (state.wiz.category === c[0]) + '"><span class="tagline">' + (c[0] === "sensitive" ? pill("info", "Suggested") : "") + "</span><b>" + c[1] + "</b><span>" + c[2] + '</span><span class="small">' + c[3] + "</span></button>";
+      }).join("") + "</div>" +
+      '<div class="note"><b>Why Sensitive:</b> a contract price, a bank account and a personal name were found. Confirmed by business owner <b>N. Perera (Legal)</b>, 10 Nov 2026, 10:36.</div>' +
+      (state.wiz.category === "public" || state.wiz.category === "internal" ? '<div class="note warn"><b>Check this choice.</b> The file contains a contract price and bank details. Choosing a lower category is recorded in the audit log with your name.</div>' : "") +
+      stepNav(2) + "</section>";
+  }
+  function step3() {
+    var w = state.wiz;
+    var rows = Object.keys(ENT).map(function (k) {
+      var e = ENT[k];
+      var opts = [["placeholder", "Placeholder"], ["mask", "Mask"], ["delete", "Delete"]];
+      if (k === "price") opts.push(["range", "Range"]);
+      var sel = '<select id="m-' + k + '" data-act="method" data-k="' + k + '" aria-label="Method for ' + e.type + '">' + opts.map(function (o) { return '<option value="' + o[0] + '"' + (w.methods[k] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select>";
+      var shown = w.methods[k] === "range" ? e.range : w.methods[k] === "delete" ? "[removed]" : w.methods[k] === "mask" ? "████" : e.ph;
+      return [e.type, esc(e.text), sel, '<span class="mono">' + esc(shown) + "</span>", '<span class="num">' + e.n + "</span>"];
+    });
+    var locs = [
+      ["Body text", "good", "Checked · 9 items found"],
+      ["Tables", "good", "Checked · price schedule, 2 items"],
+      ["Attachments", "good", "Schedule A checked"],
+      ["Comments", "good", "2 comments checked"],
+      ["Tracked changes", "good", "5 changes checked · 1 personal name"],
+      ["File properties", "good", "Author and company fields cleared"],
+      ["Image, page 7", "warn", "Could not be read. Check by hand before release"]
+    ];
+    return '<section class="card"><div class="card-h"><h2 class="h">Find and mask sensitive data</h2><span class="small">Rules v1.4, set by CICT</span></div>' +
+      '<div class="grid2"><div style="display:grid;gap:6px"><h3>Original <span class="small">(restricted, you are authorised)</span></h3><div class="doc">' + docHtml(false) + '</div></div>' +
+      '<div style="display:grid;gap:6px"><h3>Masked preview <span class="small">(what may leave the boundary)</span></h3><div class="doc">' + docHtml(true) + "</div></div></div>" +
+      "<h3>What was found</h3>" + table(["Type", "Found", "Method", "Shown as", "Places"], rows, [4]) +
+      '<p class="small">The same company always gets the same stand-in (for example [PARTY-B] in all 14 places), so links between clauses stay intact. Originals and the stand-in key are stored separately with their own permissions <span class="ref">§1.4</span>.</p>' +
+      '<h3>Where it looked</h3><ul class="checks">' + locs.map(function (l) { return "<li><b>" + l[0] + "</b><span>" + pill(l[1], l[1] === "good" ? "Done" : "Manual check") + " " + l[2] + "</span></li>"; }).join("") + "</ul>" +
+      '<label class="note warn" style="display:flex;gap:10px;align-items:flex-start" for="manual"><input type="checkbox" id="manual" data-act="manual"' + (w.manual ? " checked" : "") + '><span><b>I checked the page 7 image by hand.</b> It shows the crane model plate only, with no sensitive data.</span></label>' +
+      stepNav(3) + "</section>";
+  }
+  function step4() {
+    var w = state.wiz;
+    var targets = [
+      ["self", "Self-hosted model", "Runs inside the CICT cloud. Allowed up to Confidential. No approval needed.", "Contract review, records Q&A"],
+      ["external", "Approved external model", "Masked content only. Sensitive material needs the data owner's approval first.", "Better long-document reasoning (sample)"]
+    ];
+    var blocked = w.category === "confidential" && w.target === "external";
+    var needApproval = w.target === "external" && w.category === "sensitive";
+    var appr = "";
+    if (blocked) {
+      appr = '<div class="note bad"><b>Blocked.</b> Confidential material cannot be sent outside the approved environment, even masked <span class="ref">§1.3 §2.4</span>.</div>';
+    } else if (needApproval) {
+      if (w.approval === "none") appr = '<div class="note warn"><b>Approval needed.</b> Masking alone is not permission to send material out <span class="ref">§1.4.7</span>.</div><div class="btns"><button class="btn primary" data-act="approve-req">Ask the data owner for approval</button></div>';
+      if (w.approval === "pending") appr = '<div class="note">' + pill("info", "Waiting") + " Request sent to <b>S. Silva (data owner)</b> at 10:39.</div>" + '<div class="btns"><button class="btn" data-act="approve-sim">Show the approval (demo)</button></div>';
+      if (w.approval === "approved") appr = '<div class="note good">' + pill("good", "Approved") + " <b>S. Silva (data owner)</b> approved release at 10:41. Recorded in the audit log.</div>";
+    } else {
+      appr = '<div class="note good">' + pill("good", "Allowed") + " This route is allowed for the chosen category without extra approval.</div>";
+    }
+    return '<section class="card"><h2 class="h">Choose where it runs</h2><p class="sub">CICT decides which models are approved for which data categories. Nothing goes to a model that isn\'t on the list <span class="ref">§2.4</span>.</p><div class="choice">' +
+      targets.map(function (t) {
+        return '<button class="opt" data-act="target" data-v="' + t[0] + '" aria-pressed="' + (w.target === t[0]) + '"><b>' + t[1] + "</b><span>" + t[2] + '</span><span class="small">Used for: ' + t[3] + "</span></button>";
+      }).join("") + "</div>" +
+      '<h3>Outbound check</h3><ul class="checks">' +
+      "<li><b>What is sent</b><span>Your question, 6 passages from the knowledge base, the masked agreement</span></li>" +
+      "<li><b>Unmasked fields</b><span>" + pill("good", "0 found") + " in question, passages and attachments</span></li>" +
+      "<li><b>Manual checks</b><span>" + pill("good", "1 of 1 done") + " page 7 image, by N. Perera</span></li>" +
+      "<li><b>Provider terms</b><span>No training on CICT data · deleted after 30 days (sample terms shown to admins)</span></li></ul>" +
+      appr + stepNav(4) + "</section>";
+  }
+  var FINDINGS = [
+    { t: "Liability cap is well below the checklist minimum", sev: "bad", sevl: "High",
+      fact: "Clause 7.2 caps the Contractor's total liability at 10% of the contract price. A tracked change shows it was lowered from 100%.",
+      assess: "The services contract checklist (v2.1, item 4) asks for at least 100% for maintenance of critical equipment.",
+      act: "Restore the cap to 100%, or record an approved exception.",
+      src: "Clause 7.2, page 4", quote: "The Contractor's total liability under this Agreement is capped at 10% of the contract price." },
+    { t: "Service levels can't be assessed", sev: "warn", sevl: "Not enough evidence",
+      fact: "Clause 9.1 refers to service levels in Schedule C. Schedule C is not in the uploaded file.",
+      assess: "Uptime, response times and penalties can't be judged without it.",
+      act: "Upload Schedule C and run the review again.",
+      src: "Clause 9.1, page 6", quote: "The Contractor shall meet the service levels set out in Schedule C." },
+    { t: "Signed after work started", sev: "warn", sevl: "Medium",
+      fact: "The agreement was signed on 12 Apr 2024. Work order WO-118 shows services started on 1 Mar 2024.",
+      assess: "Work ran for about six weeks without a signed contract.",
+      act: "Confirm the reason with Procurement and record it on the contract file.",
+      src: "Signature page, page 14 · Work order WO-118", quote: "Signed for and on behalf of the Company on 12 April 2024." },
+    { t: "Renews automatically unless notice is given", sev: "warn", sevl: "Medium",
+      fact: "Clause 3.3 renews the agreement for 3 years unless either party gives 90 days' written notice.",
+      assess: "Missing the notice date commits the Company to 3 more years.",
+      act: "Set a reminder for 31 Dec 2026, 90 days before expiry on 31 Mar 2027.",
+      src: "Clause 3.3, page 2", quote: "...shall renew automatically for a further period of three (3) years unless either party gives ninety (90) days' written notice." },
+    { t: "Arbitration seat not stated", sev: "warn", sevl: "Medium",
+      fact: "Clause 15 chooses Sri Lankan law and arbitration but names no seat or rules.",
+      assess: "An unclear seat can slow down any dispute.",
+      act: "Add the seat and the arbitration rules.",
+      src: "Clause 15, page 11", quote: "Disputes shall be referred to arbitration under the laws of Sri Lanka." }
+  ];
+  function step5() {
+    var w = state.wiz;
+    var runOn = w.target === "self" ? "Self-hosted model, inside the CICT cloud" : "Approved external model, masked content only";
+    return '<section class="card"><div class="card-h"><h2 class="h">Answer with sources</h2>' + pill("info", "Draft") + "</div>" +
+      '<ul class="checks"><li><b>Checked against</b><span>Services contract checklist v2.1 · knowledge base, in force since 1 Jan 2026</span></li>' +
+      "<li><b>Ran on</b><span>" + runOn + "</span></li>" +
+      "<li><b>Names</b><span>Stand-ins swapped back to real names inside the CICT cloud, for authorised viewers only</span></li></ul>" +
+      '<div class="note warn"><b>Not enough evidence for one item.</b> Schedule C is referenced but missing. Upload it and run the review again. The assistant says so rather than guessing <span class="ref">§2.2 §2.3</span>.</div>' +
+      FINDINGS.map(function (f) {
+        return '<article class="finding ' + f.sev + '"><div class="fh"><h3>' + f.t + "</h3>" + pill(f.sev, f.sevl) + "</div>" +
+          '<dl class="triad"><dt>From the document</dt><dd>' + esc(f.fact) + ' <span class="cite">' + f.src + "</span></dd>" +
+          "<dt>Assessment</dt><dd>" + esc(f.assess) + "</dd>" +
+          "<dt>Recommended</dt><dd>" + esc(f.act) + "</dd></dl>" +
+          "<details><summary>Show source text</summary><blockquote>" + esc(f.quote) + "</blockquote></details></article>";
+      }).join("") +
+      '<p class="small">Facts, assessments and recommendations are kept apart, and every point cites a clause and page you can open.</p>' +
+      stepNav(5) + "</section>";
+  }
+  function step6() {
+    var rv = state.wiz.review;
+    var stages = [["draft", "Draft created by the assistant", "10:44 · task TSK-2291"], ["review", "In review", "Specialist reviewer: Li Wei"], ["confirmed", "Confirmed", "Archived to records and requester notified"]];
+    var order = ["draft", "review", "confirmed"];
+    var idx = order.indexOf(rv);
+    var tl = '<ol class="timeline">' + stages.map(function (s, i) {
+      var cls = i < idx || rv === "confirmed" ? "done" : i === idx ? "cur" : "";
+      return '<li class="' + cls + '"><span class="dot" aria-hidden="true">' + (cls === "done" ? "✓" : "") + "</span><div><b>" + s[1] + '</b><div class="small">' + s[2] + "</div></div></li>";
+    }).join("") + "</ol>";
+    var actions = "";
+    if (rv === "draft") actions = '<button class="btn" data-act="toast" data-msg="In the build, the draft opens for editing with tracked changes.">Edit the draft</button><button class="btn primary" data-act="review" data-v="review">Submit for review</button>';
+    if (rv === "review") actions = '<button class="btn" data-act="review" data-v="draft">Return with comments</button><button class="btn primary" data-act="review" data-v="confirmed">Confirm as reviewer</button>';
+    if (rv === "confirmed") actions = '<a class="btn" href="#records">Open in Records</a><button class="btn" data-act="restart">Start again</button>';
+    return '<section class="card"><h2 class="h">Review and confirm</h2><p class="sub">The result stays a draft until an authorised person confirms it. Legal opinions and approvals are always made by CICT staff <span class="ref">Intro</span>.</p>' + tl +
+      (rv === "confirmed" ? '<div class="note good"><b>Confirmed by Li Wei.</b> Saved to the records archive as <span class="mono">REC-2026-0418</span>, linked to contract CON-2024-051. N. Perera has been notified, and a renewal reminder is set for 31 Dec 2026.</div>' : "") +
+      '<div class="btns">' + actions + "</div>" + stepNav(6) + "</section>";
+  }
+  function pageAssistant(r) {
+    var w = state.wiz;
+    var stepper = '<div class="stepper-wrap"><ol class="stepper">' + STEPS.map(function (l, i) {
+      var n = i + 1;
+      var cls = n < w.step ? "done" : n === w.step ? "cur" : "";
+      return '<li class="' + cls + '"><button data-act="step" data-v="' + n + '"' + (n > w.max ? " disabled" : "") + (n === w.step ? ' aria-current="step"' : "") + '><span class="n">Step ' + n + "</span><span>" + l + "</span></button></li>";
+    }).join("") + "</ol></div>";
+    var body = [step1, step2, step3, step4, step5, step6][w.step - 1]();
+    return head(r, '<span class="sample">Sample contract</span>') + stepper + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- contracts ---------- */
+  function pageContracts(r) {
+    var t = curTab("contracts", "register");
+    var body = "";
+    if (t === "register") {
+      body = table(["Contract", "Counterparty", "Type", "Value", "Term", "Risk", "Flags"], [
+        [m("CON-2024-051"), "Northwind Crane Services", "Maintenance services", "USD 1-2m", '<span class="nw">1 Mar 2024 to 31 Mar 2027</span>', pill("warn", "Medium"), "Signed 12 Apr 2024, after work started · notice due 31 Dec 2026"],
+        [m("CON-2025-087"), "Coral Bay Marine Supplies", "Supply", "USD 250-500k", '<span class="nw">1 Jan 2025 to 31 Dec 2026</span>', pill("good", "Low"), "Payment milestone 20 Nov 2026"],
+        [m("CON-2025-102"), "Meridian Freight Lines", "Shipping services", "USD 500k-1m", '<span class="nw">1 Jun 2025 to 31 May 2028</span>', pill("bad", "High"), "Due diligence draft · " + (p2on() ? '<a href="#compliance">screening hit to verify</a>' : "screening hit to verify")],
+        [m("CON-2026-009"), "Sapphire Tug Services", "Marine services", "USD 100-250k", '<span class="nw">1 Feb 2026 to 31 Jan 2027</span>', pill("good", "Low"), "None"],
+        [m("CON-2026-021"), "Eastgate IT Solutions", "Software licence", "USD 50-100k", '<span class="nw">15 Mar 2026 to 14 Mar 2029</span>', pill("warn", "Medium"), "Renews automatically"]
+      ]) + '<p class="small">Values show as ranges for your role. Exact prices are visible to roles with Sensitive access <span class="ref">§1.5</span>.</p>';
+    }
+    if (t === "diligence") {
+      body = '<section class="card"><div class="card-h"><h2 class="h">Due diligence: Meridian Freight Lines</h2>' + pill("info", "Draft report") + "</div>" +
+        '<ul class="checks"><li><b>Scope</b><span>Ownership and control, related parties, licences, litigation, sanctions, adverse media</span></li>' +
+        "<li><b>Checklist</b><span>Shipping line due diligence v1.3</span></li><li><b>Overall rating</b><span>" + pill("bad", "High, draft") + "</span></li></ul>" +
+        "<h3>Sources and query times</h3>" + table(["Source", "Queried", "Result"], [
+          ["Company registry extract (uploaded)", '<span class="nw">3 Nov 2026</span>', "2 beneficial owners named"],
+          ["Approved risk list (CICT licence)", '<span class="nw">10 Nov 2026, 09:12</span>', "1 open commercial claim"],
+          ["OFAC and EU sanctions lists", '<span class="nw">10 Nov 2026, 06:00</span>', "Possible match on a similar name"],
+          ["Adverse media (CICT licence)", '<span class="nw">10 Nov 2026, 09:13</span>', "No results"]
+        ]) +
+        "<h3>Findings</h3>" + table(["Area", "Finding", "Rating"], [
+          ["Ownership", "One of two beneficial owners could not be verified", pill("warn", "Check")],
+          ["Litigation", "Open cargo claim against the company in another port (2025)", pill("warn", "Medium")],
+          ["Sanctions", "Name is similar to a list entry. Not a determination; verify by hand", pill("bad", "Verify")],
+          ["Licences", "Operating licence copy expired 30 Sep 2026", pill("warn", "Missing")]
+        ]) +
+        '<div class="note"><b>Missing information is not treated as no risk.</b> Outstanding: current operating licence, verification of the second owner.</div>' +
+        '<div class="btns"><button class="btn" data-act="toast" data-msg="In the build, you attach documents and the report updates.">Add materials</button><button class="btn primary" data-act="toast" data-msg="Sent to the specialist reviewer.">Submit for review</button></div></section>';
+    }
+    if (t === "deadlines") {
+      body = table(["Contract", "Milestone", "Date", "Reminder", "Owner", "Status"], [
+        [m("CON-2025-087"), "Second payment milestone", '<span class="nw">20 Nov 2026</span>', "14 and 3 days before · in-app and email", "Finance", pill("warn", "10 days")],
+        [m("CON-2024-051"), "Notice to renew or end (90 days)", '<span class="nw">31 Dec 2026</span>', "60, 30 and 7 days before", "N. Perera", pill("warn", "51 days")],
+        [m("CON-2026-009"), "Contract expiry", '<span class="nw">31 Jan 2027</span>', "90 days before", "Procurement", pill("neutral", "Scheduled")],
+        [m("CON-2024-051"), "Maintenance period ends", '<span class="nw">31 Mar 2027</span>', "30 days before", "Engineering", pill("neutral", "Scheduled")]
+      ]);
+    }
+    return head(r) + tabs("contracts", [["register", "Register"], ["diligence", "Due diligence"], ["deadlines", "Deadlines"]]) + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- records ---------- */
+  function pageRecords(r) {
+    var t = curTab("records", "ask");
+    var body = "";
+    if (t === "ask") {
+      body = '<section class="card"><label for="rq"><h2 class="h">Ask the archive</h2></label><input type="search" id="rq" value="When does the crane maintenance agreement expire, and what notice do we need to give?">' +
+        '<div class="note"><p>It expires on <b>31 Mar 2027</b> <span class="cite">CON-2024-051 · clause 3.1, page 2</span>. It renews automatically for 3 years unless either party gives 90 days\' written notice <span class="cite">clause 3.3, page 2</span>, so notice is due by <b>31 Dec 2026</b>.</p></div>' +
+        '<div class="note warn"><b>Version note.</b> A 2025 amendment exists in draft only and was not used. Answers use confirmed versions unless you ask otherwise <span class="ref">§2.2</span>.</div>' +
+        '<p class="small">Searched 3 records you are allowed to see. 1 restricted record was excluded and is not cited.</p></section>';
+    }
+    if (t === "archive") {
+      var rows = [
+        [m("REC-2026-0418"), "Contract review: crane maintenance agreement", "Contract", "Legal", "2026", "CON-2024-051", "10 years after expiry", pill("good", "Active")],
+        [m("REC-2025-0233"), "Board minutes, Q3 2025 meeting", "Board", "Company Secretary", "2025", "BRD-2025-03", "Permanent", pill("good", "Active")],
+        [m("REC-2024-0102"), "Due diligence: Meridian Freight Lines", "Due diligence", "Legal", "2024", "CON-2025-102", "7 years", pill("good", "Active")],
+        [m("REC-2019-0057"), "Cargo claim file", "Legal case", "Legal", "2019", "CASE-2019-006", "7 years", pill("warn", "Disposal hold · open dispute")],
+        [m("REC-2016-0011"), "Procurement policy v2.0", "Policy", "Compliance", "2016", "POL-PRC", "10 years", pill("info", "Due for review")]
+      ];
+      body = table(["Record", "Title", "Category", "Department", "Year", "Linked matter", "Retention", "Status"], rows) +
+        '<p class="small">One record can link to several matters, so nothing is uploaded twice. Disposal needs an approval and is blocked while a hold is in place <span class="ref">§3.6.4</span>.</p>';
+    }
+    if (t === "import") {
+      body = '<section class="card"><div class="card-h"><h2 class="h">Bulk import IMP-0007</h2><span class="small">Historical legal files, 2015 to 2024</span></div><div class="grid3">' +
+        '<div class="tile"><b>1,204 imported</b><span class="small">Classified and indexed</span></div>' +
+        '<div class="tile warn"><b>12 failed</b><span class="small">5 password-protected, 7 unreadable scans</span></div>' +
+        '<div class="tile"><b>31 duplicates</b><span class="small">Linked to existing records, not re-uploaded</span></div></div>' +
+        '<div class="btns"><button class="btn primary" data-act="toast" data-msg="In the build, you fix the 12 files and retry only those.">Fix and retry 12 files</button><button class="btn" data-act="toast" data-msg="The import log lists every file and its result.">Download the import log</button></div></section>';
+    }
+    return head(r) + tabs("records", [["ask", "Ask"], ["archive", "Archive"], ["import", "Import"]]) + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- knowledge base ---------- */
+  function pageKnowledge(r) {
+    return head(r) +
+      '<div class="card"><label for="kq"><h2 class="h">Search in English, Chinese or Sinhala</h2></label><input type="search" id="kq" placeholder="For example: approval limit for service contracts"></div>' +
+      table(["Material", "Category", "Issued by", "Version", "Effective", "Status", "Access"], [
+        ["Personal Data Protection Act, No. 9 of 2022", "Law", "Parliament of Sri Lanka", "As enacted", "Staged, see source", pill("good", "In force"), "Public"],
+        ["Company Management Policies (CMP)", "Company policy", "CICT", "2025.1", "1 Jan 2025", pill("good", "In force"), "Internal"],
+        ["Anti-bribery policy", "Headquarters policy", "Headquarters", "2024", "1 Jul 2024", pill("good", "In force"), "Internal"],
+        ["Procurement policy", "Company policy", "CICT", "3.3", "1 Apr 2026", pill("good", "In force"), "Internal"],
+        ["Procurement policy", "Company policy", "CICT", "3.2", "1 Jan 2023", pill("neutral", "Superseded 31 Mar 2026"), "Internal"],
+        ["Services contract checklist", "Review checklist", "Legal", "2.1", "1 Jan 2026", pill("good", "In force"), "Internal"],
+        ["Board minutes 2015 to 2025", "Historical records", "Company Secretary", "n/a", "n/a", pill("neutral", "Archive"), "Sensitive"]
+      ]) +
+      '<div class="note warn"><b>Two versions may apply.</b> Contracts signed before 1 Apr 2026 fall under procurement policy 3.2. Answers name the version they used, and flag the overlap <span class="ref">§2.2</span>.</div>' +
+      '<p class="small">Sample entries. CICT supplies and keeps the content current; Allion loads and configures it (assumption A5).</p>';
+  }
+
+  /* ---------- administration ---------- */
+  function pageAdmin(r) {
+    var t = curTab("admin", "models");
+    var body = "";
+    if (t === "models") {
+      function meter(used, cap) { var pct = Math.round(used / cap * 100); return '<div class="meter" title="' + pct + '% of budget"><span class="' + (pct >= 90 ? "warn" : "") + '" style="width:' + pct + '%"></span></div><span class="small">USD ' + used.toLocaleString("en-US") + " of " + cap.toLocaleString("en-US") + " · " + pct + "%</span>"; }
+      body = table(["Model", "Runs", "Allowed data", "Used for", "Status", "Cost this month"], [
+        ["Self-hosted open-weight model", "Inside the CICT cloud", "Up to Confidential", "Contract review, records Q&A", pill("good", "Live"), meter(1240, 2000)],
+        ["Chinese model A", "External, masked only", "Public, Internal, masked Sensitive", "Translation drafts", pill("good", "Live"), meter(310, 500)],
+        ["International model B", "External, masked only", "Public, Internal, masked Sensitive", "Legal analysis", pill("warn", "Slow · 8.2 s"), meter(462, 500)],
+        ["International model C", "External", "Not approved", "None", pill("neutral", "Off"), "None"]
+      ]) +
+        '<div class="note"><b>If a model is down</b>, users are told or the task moves to another approved model. Material is never sent to an unapproved one <span class="ref">§2.4</span>. The SOW names DeepSeek, Kimi, GPT, Claude, Gemini and Grok as options; any provider with an API can be added.</div>' +
+        '<div class="note warn"><b>Budget alert.</b> International model B has used 92% of its monthly budget.</div>';
+    }
+    if (t === "health") {
+      body = '<div class="grid3">' + [
+        ["good", "Web application", "Up · 99.9% this month"], ["warn", "Model gateway", "Slow responses from model B"], ["good", "Masking service", "Up · rules v1.4"],
+        ["good", "OCR", "Up · 3 jobs queued"], ["good", "Search indexes", "Rebuilt 02:00"], ["good", "Backups", "Last restore test 1 Nov 2026"]
+      ].map(function (x) { return '<div class="tile ' + x[0] + '">' + pill(x[0], x[0] === "good" ? "Healthy" : "Degraded") + "<b>" + x[1] + '</b><span class="small">' + x[2] + "</span></div>"; }).join("") + "</div>" +
+        '<p class="small">Red, amber and green service health, with alerts to named staff <span class="ref">§2.6</span>. Upgrades are announced in advance and can be rolled back.</p>';
+    }
+    if (t === "audit") {
+      body = table(["Time", "Who", "Action", "Item", "Detail"], [
+        ['<span class="nw">10 Nov 10:44</span>', "N. Perera", "Model call", m("TSK-2291"), "International model B · masked · 6 passages"],
+        ['<span class="nw">10 Nov 10:41</span>', "S. Silva", "Approved release", m("TSK-2291"), "Masked content to an external model"],
+        ['<span class="nw">10 Nov 10:38</span>', "N. Perera", "Masking", m("DOC-8812"), "Rules v1.4 · 7 types · 1 manual check"],
+        ['<span class="nw">10 Nov 09:15</span>', "Li Wei", "Export", m("REC-2025-0233"), "PDF · within permissions"],
+        ['<span class="nw">10 Nov 08:02</span>', "K. Dias (admin)", "Permission change", "Role: specialist reviewer", "Added: confirm contract reviews"]
+      ]) + '<p class="small">Auditors can search and export logins, access, uploads, model calls, reviews, exports, deletions and permission changes <span class="ref">§3.7.4</span>.</p>';
+    }
+    if (t === "users") {
+      body = table(["Role", "Users", "Can do"], [
+        ["Business user", '<span class="num">64</span>', "Ask, upload, see results for own department"],
+        ["Specialist reviewer", '<span class="num">9</span>', "Review, return and confirm results"],
+        ["Read-only", '<span class="num">23</span>', "Search and view within permissions"],
+        ["Auditor", '<span class="num">2</span>', "Search and export audit logs"],
+        ["Administrator", '<span class="num">3</span>', "Models, knowledge base, rules, users"]
+      ]) + '<p class="small">Nobody can grant themselves administrator rights, and default test accounts are removed before go-live <span class="ref">§3.7.1</span>.</p>';
+    }
+    return head(r) + tabs("admin", [["models", "Models"], ["health", "Health"], ["audit", "Audit log"], ["users", "Users and roles"]]) + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- phase 2: legal affairs ---------- */
+  function pageLegal(r) {
+    var t = curTab("legal", "cases");
+    var body = "";
+    if (t === "cases") {
+      body = table(["Case", "Matter", "Type", "Stage", "Exposure", "Next date", "Risk"], [
+        [m("CASE-2026-014"), "Cargo damage claim, Meridian Freight Lines", "Commercial claim", "Pre-action", "USD 50-100k", '<span class="nw">2 Dec 2026</span>', pill("warn", "Medium")],
+        [m("CASE-2025-031"), "Employment dispute", "Labour", "Labour tribunal", "LKR 2-5m", '<span class="nw">18 Nov 2026</span>', pill("good", "Low")],
+        [m("CASE-2025-022"), "Berth damage after vessel contact", "Admiralty", "Mediation", "USD 250-500k", '<span class="nw">9 Jan 2027</span>', pill("bad", "High")]
+      ]) + '<p class="small">Disputes raised during a contract link back to it in the contract register <span class="ref">§3.1.4</span>.</p>';
+    }
+    if (t === "memo") {
+      var sec = [
+        ["Facts", "On 4 Sep 2026, three containers were damaged during discharge from MV Sample Star. Meridian Freight Lines claims USD 86,000. Survey report SR-221 says the lashing failed before arrival.", "Survey report SR-221, page 3"],
+        ["Legal basis", "Shipping services agreement, clause 11.3 (cargo handling liability) and clause 11.5 (exclusion for damage before arrival).", "CON-2025-102, clauses 11.3 and 11.5"],
+        ["Analysis", "If the survey finding holds, clause 11.5 excludes liability. The berth 3 camera log is not in the file, so this can't be settled yet.", ""],
+        ["Risks", "Exposure USD 50-100k. Relationship risk with a key shipping line.", ""],
+        ["Recommendations", "Ask for the camera log. Send a holding reply relying on clause 11.5. Review again in 14 days.", ""]
+      ];
+      body = '<section class="card"><div class="card-h"><h2 class="h">Legal memo: CASE-2026-014</h2>' + pill("info", "Draft · pending review") + "</div>" +
+        '<dl class="triad">' + sec.map(function (s) { return "<dt>" + s[0] + "</dt><dd>" + s[1] + (s[2] ? ' <span class="cite">' + s[2] + "</span>" : "") + "</dd>"; }).join("") + "</dl>" +
+        '<div class="note warn"><b>Can\'t be determined yet:</b> whether damage happened before arrival. The memo says so instead of assuming <span class="ref">§2.3</span>.</div>' +
+        '<div class="btns"><button class="btn primary" data-act="toast" data-msg="Sent to the specialist reviewer.">Submit for review</button></div></section>';
+    }
+    if (t === "translate") {
+      var rows = [
+        ["第七条 付款条件：买方应在收到合格发票后三十（30）日内支付服务费。", "Clause 7. Payment terms: The Buyer shall pay the service fee within thirty (30) days of receiving a valid invoice.", pill("good", "Amounts and dates match")],
+        ["第十二条 违约责任：如任何一方未履行本合同项下的义务，应向守约方支付合同总价百分之五（5%）的违约金。", "Clause 12. Liability for breach: If either party fails to perform its obligations under this contract, it shall pay the non-defaulting party liquidated damages of five percent (5%) of the total contract price.", pill("info", "Term base: 违约金 = liquidated damages")],
+        ["第十五条 争议解决：因本合同引起的任何争议，双方应首先友好协商解决；协商不成的，提交仲裁。", "Clause 15. Dispute resolution: Any dispute arising from this contract shall first be settled through friendly negotiation; if negotiation fails, it shall be submitted to arbitration.", pill("warn", "Ambiguous: no arbitration body named")]
+      ];
+      body = '<section class="card"><div class="btns"><label class="small" for="from">From</label><select id="from"><option>Chinese</option><option>English</option><option>Sinhala</option></select><label class="small" for="to">To</label><select id="to"><option>English</option><option>Sinhala</option><option>Chinese</option></select><span class="sample">Sample clauses</span></div>' +
+        '<div class="scroll aligned"><table><thead><tr><th>Source</th><th>Translation</th><th>Checks</th></tr></thead><tbody>' +
+        rows.map(function (x) { return '<tr><td class="zh" lang="zh">' + x[0] + "</td><td>" + x[1] + "</td><td>" + x[2] + "</td></tr>"; }).join("") + "</tbody></table></div>" +
+        '<p class="small">Paragraphs and numbering are kept. Amounts, dates, parties and obligations are checked for consistency, and unclear terms are flagged for a person to review <span class="ref">§3.2.3</span>.</p></section>';
+    }
+    if (t === "updates") {
+      body = '<section class="card"><div class="card-h"><h2 class="h">Daily regulatory check</h2><span class="small">10 Nov 2026, 06:30 · 6 sources checked</span></div>' +
+        table(["Update", "Source", "Relevance", "Action"], [
+          ["Gazette notice on port dues (illustrative)", "Official source 1", pill("warn", "High · commercial"), '<button class="btn" data-act="toast" data-msg="A verification task was created for Legal.">Create a task</button>'],
+          ["Amendment to customs regulations (illustrative)", "Official source 2", pill("info", "Medium · operations"), '<button class="btn" data-act="toast" data-msg="A verification task was created for Legal.">Create a task</button>'],
+          ["Source unreachable since 9 Nov", "Official source 3", pill("bad", "Check failed"), '<button class="btn" data-act="toast" data-msg="In the build, you upload the update by hand.">Add by hand</button>']
+        ]) + '<p class="small">Failed checks are shown, never hidden. CICT confirms the list of official sources (assumption A16).</p></section>';
+    }
+    return head(r) + tabs("legal", [["cases", "Cases"], ["memo", "Legal memo"], ["translate", "Translation"], ["updates", "Regulatory updates"]]) + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- phase 2: policies ---------- */
+  function pagePolicy(r) {
+    var t = curTab("policy", "register");
+    var body = "";
+    if (t === "register") {
+      body = table(["Policy", "Owner", "Version", "Status", "Next review"], [
+        ["Gifts and hospitality", "Compliance", "4 (draft)", pill("info", "In consultation"), "n/a"],
+        ["Gifts and hospitality", "Compliance", "3", pill("good", "In force"), '<span class="nw">30 Jun 2027</span>'],
+        ["Procurement", "Procurement", "3.3", pill("good", "In force"), '<span class="nw">31 Mar 2027</span>'],
+        ["Delegation of authority", "Company Secretary", "2", pill("good", "In force"), '<span class="nw">31 Dec 2026</span> ' + pill("warn", "Due soon")],
+        ["Records retention", "Records", "1.2", pill("neutral", "Repealed 1 Jan 2026"), "n/a"]
+      ]) + '<p class="small">Each policy moves through drafting, consultation, review, approval, issue, revision and repeal, with who did what and when <span class="ref">§3.3.4</span>.</p>';
+    }
+    if (t === "compare") {
+      body = '<div class="scroll redline"><table><thead><tr><th>Clause</th><th>Change, version 3 to draft 4</th><th>Basis</th></tr></thead><tbody>' +
+        '<tr><td class="mono">4.2</td><td>Gifts with a value above LKR <del>10,000</del> <ins>5,000</ins> must be declared to <del>the line manager</del> <ins>Compliance within 5 working days</ins>.</td><td>Headquarters anti-bribery policy, §3.1 (sample)</td></tr>' +
+        '<tr><td class="mono">4.5</td><td><ins>Hospitality for public officials needs prior written approval from Compliance.</ins></td><td>Headquarters anti-bribery policy, §3.4 (sample)</td></tr>' +
+        '<tr><td class="mono">6.1</td><td>Declarations are kept for <del>3</del> <ins>7</ins> years.</td><td>Records retention schedule (sample)</td></tr>' +
+        '</tbody></table></div><p class="small">The draft goes to the responsible department and authorised staff before it is issued <span class="ref">§3.3.2</span>.</p>';
+    }
+    if (t === "align") {
+      body = '<div style="display:grid;gap:12px">' + [
+        ["warn", "Missing requirement", "The procurement policy has no rule on hospitality for public officials. The headquarters policy §3.4 requires prior approval.", "Add clause 4.5 (already in draft 4).", ""],
+        ["bad", "Conflicting authority", "Procurement policy 3.3 §2.4 lets the Head of Procurement approve contracts up to USD 500k. Delegation of authority v2 sets USD 300k.", "Align the limits.", "Sent to Compliance for specialist review"],
+        ["warn", "Inconsistent terms", "\"Related party\" is defined differently in the procurement policy and the delegation of authority.", "Use one definition, from the Articles of Association.", ""]
+      ].map(function (f) {
+        return '<article class="finding ' + f[0] + '"><div class="fh"><h3>' + f[1] + "</h3>" + pill(f[0], f[0] === "bad" ? "Conflict" : "Gap") + '</div><dl class="triad"><dt>Found</dt><dd>' + f[2] + "</dd><dt>Proposed</dt><dd>" + f[3] + "</dd>" + (f[4] ? "<dt>Routed</dt><dd>" + f[4] + ' <span class="ref">§3.3.3</span></dd>' : "") + "</dl></article>";
+      }).join("") + "</div>";
+    }
+    return head(r) + tabs("policy", [["register", "Register"], ["compare", "Compare versions"], ["align", "Headquarters alignment"]]) + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- phase 2: compliance ---------- */
+  function pageCompliance(r) {
+    var t = curTab("compliance", "screening");
+    var body = "";
+    if (t === "screening") {
+      body = '<div class="note warn"><b>A similar name is not a finding.</b> The system never marks an entity as sanctioned on a name alone. Lists refreshed 10 Nov 2026, 06:00 <span class="ref">§3.4.2</span>.</div>' +
+        table(["Entity", "Type", "Result", "Closest list entry", "Next step"], [
+          ["Meridian Freight Lines", "Shipping line", pill("bad", "Possible match"), "MERIDIAN FREIGHT LINE CO (sample entry, OFAC list) · name 86% · country differs", "Verify registration and owners"],
+          ["Eastgate Shipping Agency", "Customer", pill("warn", "Possible match"), "EASTGATE SHIPPING (sample entry, EU list) · alias 78% · no date of incorporation", "Ask for incorporation documents"],
+          ["Coral Bay Marine Supplies", "Supplier", pill("good", "No match"), "None", "Record saved"],
+          ["Northwind Crane Services", "Contractor", pill("good", "Cleared"), "Reviewed by Li Wei, 3 Nov 2026: different registration number", "None"]
+        ]) +
+        '<div class="btns"><button class="btn primary" data-act="toast" data-msg="In the build, you attach evidence and record a conclusion.">Record a conclusion</button></div>';
+    }
+    if (t === "anomalies") {
+      body = '<div class="note"><b>An alert is not a finding of bribery.</b> Authorised staff investigate and record the conclusion <span class="ref">§3.4.1</span>.</div>' +
+        table(["Contract", "What differs", "Contract says", "Data shows", "Suggested check"], [
+          [m("CON-2025-087"), "Rebate rate", "2.5%", "4.0% paid (USD 6,200 more)", "Find who approved the extra rebate"],
+          [m("CON-2024-033"), "Tariff waiver", "Up to 10%", "15% granted", "Check the waiver approval"],
+          [m("CON-2025-102"), "Payee account", "Account on contract", "Payment to a different account", "Confirm bank details with the counterparty"]
+        ]) + '<p class="small">Data imported from finance and commercial systems, or uploaded by hand (assumption A7).</p>';
+    }
+    if (t === "remediation") {
+      body = table(["Item", "Finding", "Source", "Owner", "Due", "Status"], [
+        [m("RM-2026-07"), "Rebates above contract paid without approval", "Anomaly check, Oct 2026", "Finance", '<span class="nw">30 Nov 2026</span>', pill("info", "In progress")],
+        [m("RM-2026-05"), "Vendor bank change without a call-back", "Control test, Q3 2026", "Procurement", '<span class="nw">15 Dec 2026</span>', pill("warn", "Open")],
+        [m("RM-2026-02"), "Gifts register not kept up to date", "Compliance check", "HR", '<span class="nw">30 Sep 2026</span>', pill("good", "Closed")]
+      ]);
+    }
+    return head(r) + tabs("compliance", [["screening", "Sanctions screening"], ["anomalies", "Anomaly checks"], ["remediation", "Remediation"]]) + '<div class="fade">' + body + "</div>";
+  }
+
+  /* ---------- phase 2: board ---------- */
+  function pageBoard(r) {
+    var checks = [
+      ["good", "Approval authority", "Board approval needed: value is above the CEO limit in the CMP (sample clause 5.2). Submitted to the Board, which is correct."],
+      ["bad", "Required documents", "Board paper and legal review (REC-2026-0418) attached. Financial evaluation missing."],
+      ["warn", "Related parties", "A director on the related-party list (sample) holds shares in the counterparty's parent company. Declare the interest and record the recusal."],
+      ["warn", "Completeness", "The risk section of the board paper is empty."]
+    ];
+    return head(r) +
+      '<div class="grid2"><section class="card"><div class="card-h"><h2 class="h">Agenda item 4</h2><span class="small">Board meeting BRD-2026-04 · 26 Nov 2026</span></div>' +
+      '<p><b>Renew the crane maintenance agreement with Northwind Crane Services for 3 years.</b></p><p class="small">Submitted by N. Perera, Legal, 9 Nov 2026.</p>' +
+      '<ul class="checks">' + checks.map(function (c) { return "<li><b>" + c[1] + "</b><span>" + pill(c[0], c[0] === "good" ? "OK" : c[0] === "bad" ? "Missing" : "Add") + " " + c[2] + "</span></li>"; }).join("") + "</ul>" +
+      '<div class="btns"><button class="btn primary" data-act="toast" data-msg="Returned to N. Perera with 3 requirements.">Return to submitter</button><button class="btn" data-act="toast" data-msg="Marked as reviewed by the Company Secretary.">Mark as reviewed</button></div></section>' +
+      '<section class="card"><h2 class="h">Meeting documents</h2><ul class="list">' +
+      ["Notice of meeting", "Agenda", "Board paper", "Minutes", "Written resolution"].map(function (d) { return "<li><span>" + d + '</span><button class="btn" data-act="toast" data-msg="A draft opens from the approved template.">Draft</button></li>'; }).join("") +
+      '</ul><label for="bq"><h3>Search past meetings</h3></label><input type="search" id="bq" value="crane maintenance">' +
+      '<p class="small">2 results: Q3 2025 minutes, item 6 <span class="cite">REC-2025-0233, page 4</span> · Q1 2024 minutes, item 3 <span class="cite">REC-2024-0019, page 2</span></p></section></div>';
+  }
+
+  /* ---------- locked view ---------- */
+  function pageLocked(r) {
+    return head(r) + '<section class="locked"><span class="chip p2" style="justify-self:start">Phase 2</span><h2 class="h">' + r.label + " arrives in Phase 2</h2><p>It runs on the same platform as Phase 1, with the same masking, approvals, citations and review steps.</p><ul>" +
+      r.lockList.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul><div class="btns"><button class="btn primary" data-act="phase" data-v="both">Show Phase 1 + 2</button></div></section>';
+  }
+
+  var PAGES = { workspace: pageWorkspace, assistant: pageAssistant, knowledge: pageKnowledge, admin: pageAdmin, contracts: pageContracts, records: pageRecords, legal: pageLegal, policy: pagePolicy, compliance: pageCompliance, board: pageBoard };
+
+  /* ---------- render and events ---------- */
+  var side = document.getElementById("side"), top = document.getElementById("top"), view = document.getElementById("view"), toastEl = document.getElementById("toast");
+  function render() {
+    var r = routeById(state.route) || ROUTES[0];
+    side.innerHTML = renderSide();
+    top.innerHTML = renderTop();
+    view.innerHTML = r.phase === 2 && !p2on() ? pageLocked(r) : PAGES[r.id](r);
+  }
+  var toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.hidden = true; }, 3200);
+  }
+  function fromHash() {
+    var h = (location.hash || "").slice(1);
+    state.route = routeById(h) ? h : "workspace";
+  }
+  function go(id) {
+    if (!routeById(id)) return;
+    state.route = id;
+    render();
+    window.scrollTo(0, 0);
+    try { if (location.hash !== "#" + id) location.hash = id; } catch (err) {}
+  }
+  window.addEventListener("hashchange", function () {
+    var before = state.route;
+    fromHash();
+    if (state.route !== before) { render(); window.scrollTo(0, 0); }
+  });
+
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (a) {
+      var target = a.getAttribute("href").slice(1);
+      if (routeById(target)) { e.preventDefault(); go(target); return; }
+    }
+    var el = e.target.closest("[data-act]");
+    if (!el || el.disabled) return;
+    var act = el.getAttribute("data-act"), v = el.getAttribute("data-v"), w = state.wiz;
+    if (act === "phase") {
+      state.phase = v;
+      try { localStorage.setItem("cict-mock-phase", v); } catch (err) {}
+      if (v === "p1" && w.task !== "contract" && w.task !== "records") w.task = "contract";
+      render();
+      toast(v === "p1" ? "Showing Phase 1 only. Phase 2 screens are locked." : "Showing Phase 1 and Phase 2.");
+      return;
+    }
+    if (act === "lang") { if (v !== "en") toast("In the build, the whole interface switches language. This mock stays in English."); return; }
+    if (act === "tab") { state.tabs[el.getAttribute("data-page")] = v; render(); return; }
+    if (act === "toast") { toast(el.getAttribute("data-msg")); return; }
+    if (act === "start" || act === "restart") { state.wiz = freshWizard(); if (state.route === "assistant") { render(); } else { go("assistant"); } return; }
+    if (act === "task") {
+      if (v === "records") { go("records"); return; }
+      if (v === "memo") { state.tabs.legal = "memo"; go("legal"); return; }
+      if (v === "policy") { state.tabs.policy = "align"; go("policy"); return; }
+      w.task = v; render(); return;
+    }
+    if (act === "step") { w.step = Number(v); render(); return; }
+    if (act === "next") { if (canNext(w.step)) { w.step += 1; w.max = Math.max(w.max, w.step); render(); window.scrollTo(0, 0); } return; }
+    if (act === "back") { w.step = Math.max(1, w.step - 1); render(); return; }
+    if (act === "cat") { w.category = v; w.approval = "none"; render(); return; }
+    if (act === "target") { w.target = v; render(); return; }
+    if (act === "approve-req") { w.approval = "pending"; render(); toast("Approval request sent to S. Silva."); return; }
+    if (act === "approve-sim") { w.approval = "approved"; render(); return; }
+    if (act === "review") {
+      w.review = v; render();
+      if (v === "review") toast("Submitted to Li Wei for review.");
+      if (v === "confirmed") toast("Confirmed and archived as REC-2026-0418.");
+      if (v === "draft") toast("Returned to N. Perera with comments.");
+      return;
+    }
+  });
+  document.addEventListener("change", function (e) {
+    var el = e.target, act = el.getAttribute && el.getAttribute("data-act");
+    if (act === "method") { state.wiz.methods[el.getAttribute("data-k")] = el.value; render(); var again = document.getElementById(el.id); if (again) again.focus(); }
+    if (act === "manual") { state.wiz.manual = el.checked; render(); var cb = document.getElementById("manual"); if (cb) cb.focus(); }
+  });
+  document.addEventListener("input", function (e) {
+    if (e.target.getAttribute && e.target.getAttribute("data-act") === "prompt") state.wiz.prompt = e.target.value;
+  });
+
+  fromHash();
+  render();
+})();
+</script>
+
+</body>
+</html>

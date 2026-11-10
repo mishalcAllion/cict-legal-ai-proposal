@@ -1,0 +1,1223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>CICT Proposal Briefing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a manifest-style masthead band, then a sticky section index beside one reading column. Clause references (§) ride in mono everywhere, as in a bid response. */
+:root {
+  --bg: #f2f5f6;
+  --surface: #fbfcfc;
+  --ink: #12202a;
+  --ink-2: #44535f;
+  --muted: #5f6c77;
+  --line: #d6dde2;
+  --accent: #0e5d78;
+  --accent-soft: #e0edf2;
+  --p2: #8a5410;
+  --p2-soft: #f5ead9;
+  --mast-bg: #10303d;
+  --mast-ink: #e6f0f3;
+  --mast-muted: #a9c2cc;
+  --mast-line: #2b4d5a;
+  --note-bg: #fdf4dc;
+  --note-line: #d9b45a;
+  --c1: #2a78d6;
+  --c2: #eb6834;
+  --c3: #1baf7a;
+  --c4: #eda100;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem);
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1418;
+    --surface: #141e24;
+    --ink: #e4ebee;
+    --ink-2: #a8b5bd;
+    --muted: #8796a0;
+    --line: #26343d;
+    --accent: #63b4d2;
+    --accent-soft: #15303b;
+    --p2: #dba55c;
+    --p2-soft: #33260f;
+    --mast-bg: #0f242d;
+    --mast-ink: #e4ebee;
+    --mast-muted: #9bb3bd;
+    --mast-line: #24414c;
+    --note-bg: #2a2410;
+    --note-line: #7a6424;
+    --c1: #3987e5;
+    --c2: #d95926;
+    --c3: #199e70;
+    --c4: #c98500;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1418;
+  --surface: #141e24;
+  --ink: #e4ebee;
+  --ink-2: #a8b5bd;
+  --muted: #8796a0;
+  --line: #26343d;
+  --accent: #63b4d2;
+  --accent-soft: #15303b;
+  --p2: #dba55c;
+  --p2-soft: #33260f;
+  --mast-bg: #0f242d;
+  --mast-ink: #e4ebee;
+  --mast-muted: #9bb3bd;
+  --mast-line: #24414c;
+  --note-bg: #2a2410;
+  --note-line: #7a6424;
+  --c1: #3987e5;
+  --c2: #d95926;
+  --c3: #199e70;
+  --c4: #c98500;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, [tabindex]:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+.wrap {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.ref {
+  font-family: var(--font-mono);
+  font-size: 0.78em;
+  color: var(--muted);
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+
+/* Masthead */
+.mast { background: var(--mast-bg); color: var(--mast-ink); }
+.mast .wrap { padding-block: 40px 32px; display: grid; gap: 20px; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mast-muted);
+  margin: 0;
+}
+.mast h1 {
+  font-family: var(--font-display);
+  font-stretch: 82%;
+  font-weight: 760;
+  font-size: var(--step-3);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+  max-width: 22ch;
+}
+.mast .lede { margin: 0; max-width: 60ch; font-size: var(--step-1); color: var(--mast-ink); opacity: 0.92; }
+.manifest {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  border-top: 1px solid var(--mast-line);
+  border-left: 1px solid var(--mast-line);
+  margin: 8px 0 0;
+}
+.manifest div { border-right: 1px solid var(--mast-line); border-bottom: 1px solid var(--mast-line); padding: 10px 14px; min-width: 0; }
+.manifest dt { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mast-muted); }
+.manifest dd { margin: 2px 0 0; font-weight: 600; }
+.internal {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--mast-muted);
+}
+.internal strong { color: var(--mast-ink); }
+
+/* Page layout */
+.layout { display: grid; gap: 40px; padding-block: 40px 64px; }
+@media (min-width: 1080px) {
+  .layout { grid-template-columns: 200px minmax(0, 1fr); gap: 56px; }
+}
+.toc { display: none; }
+@media (min-width: 1080px) {
+  .toc { display: block; }
+  .toc nav { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); }
+}
+.toc p { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid var(--line); }
+.toc a { display: block; padding: 4px 0 4px 14px; margin-left: -1px; border-left: 2px solid transparent; color: var(--ink-2); text-decoration: none; font-size: 0.9rem; line-height: 1.35; }
+.toc a:hover { color: var(--ink); }
+.toc a[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+
+main { min-width: 0; display: grid; gap: 64px; max-width: 52rem; }
+section { display: grid; gap: 18px; min-width: 0; scroll-margin-top: 24px; }
+h2 {
+  font-family: var(--font-display);
+  font-stretch: 85%;
+  font-weight: 720;
+  font-size: var(--step-2);
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+.kicker { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 -10px; }
+h3 { font-family: var(--font-display); font-stretch: 90%; font-weight: 680; font-size: var(--step-1); margin: 0; line-height: 1.25; }
+p { margin: 0; max-width: 65ch; }
+.sub { color: var(--ink-2); }
+
+/* Short contents for narrow screens */
+.minitoc { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 14px 16px; }
+.minitoc p { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+.minitoc ol { margin: 0; padding-left: 1.2rem; columns: 2 12rem; column-gap: 24px; font-size: 0.92rem; }
+@media (min-width: 1080px) { .minitoc { display: none; } }
+
+/* One-minute summary */
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.points li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+.points b { font-family: var(--font-display); font-stretch: 88%; font-weight: 700; }
+@media (max-width: 560px) { .points li { grid-template-columns: 1fr; gap: 2px; } }
+
+/* Phase chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+  background: var(--accent-soft); color: var(--accent);
+}
+.chip.p2 { background: var(--p2-soft); color: var(--p2); }
+.chip.yr { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
+
+/* Module map */
+.phases { display: grid; gap: 28px; }
+.phase-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 14px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+.phase-head.p2 { border-bottom-color: var(--p2); }
+.phase-head.yr { border-bottom-color: var(--line); }
+.phase-head p { color: var(--ink-2); font-size: 0.92rem; }
+.modules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 12px; margin-top: 12px; }
+.module { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.module-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.module p { font-size: 0.92rem; color: var(--ink-2); }
+.module .rows { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Tables */
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); background: var(--bg); white-space: nowrap; }
+td.id { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); white-space: nowrap; font-weight: 500; }
+td .ref { display: block; margin-top: 2px; }
+.risks td:nth-child(2) { min-width: 11rem; }
+.risks td:nth-child(3), .risks td:nth-child(4) { min-width: 15rem; }
+.cases td:first-child { white-space: nowrap; font-weight: 600; }
+.cases td:nth-child(2), .cases td:nth-child(3) { min-width: 14rem; }
+.assume td:nth-child(2) { white-space: nowrap; font-weight: 600; }
+.assume td:nth-child(3) { min-width: 20rem; }
+.assume td:last-child { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+
+/* User roles */
+.roles { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.roles li { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 12px; font-size: 0.9rem; }
+
+/* Request flow */
+.flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr)); gap: 10px; counter-reset: step; }
+.flow li { counter-increment: step; position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px 14px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.flow li::before { content: counter(step, decimal-leading-zero); font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.flow li.key { border-color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
+.flow h3 { font-size: 1rem; }
+.flow p { font-size: 0.86rem; color: var(--ink-2); }
+.flow-note { font-size: 0.88rem; color: var(--ink-2); }
+
+.tiers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.tier { padding: 12px 14px; border-left: 1px solid var(--line); display: grid; gap: 6px; align-content: start; min-width: 0; }
+.tier:first-child { border-left: 0; }
+.tier .bar { height: 6px; border-radius: 3px; background: var(--accent); }
+.tier:nth-child(1) .bar { opacity: 0.25; }
+.tier:nth-child(2) .bar { opacity: 0.5; }
+.tier:nth-child(3) .bar { opacity: 0.75; }
+.tier h3 { font-size: 0.98rem; }
+.tier p { font-size: 0.84rem; color: var(--ink-2); }
+.tier p.eg { color: var(--muted); }
+@media (max-width: 760px) {
+  .tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tier:nth-child(3) { border-left: 0; }
+  .tier:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 440px) {
+  .tiers { grid-template-columns: 1fr; }
+  .tier { border-left: 0; }
+  .tier:nth-child(n+2) { border-top: 1px solid var(--line); }
+}
+
+/* Platform rules */
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 0 28px; margin: 0; }
+.rules div { padding: 12px 0; border-top: 1px solid var(--line); min-width: 0; }
+.rules dt { font-weight: 700; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.rules dd { margin: 4px 0 0; font-size: 0.92rem; color: var(--ink-2); }
+
+/* Acceptance */
+.accept { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 0 28px; }
+.accept li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 8px; padding: 12px 0; border-top: 1px solid var(--line); }
+.accept .n { font-family: var(--font-mono); color: var(--accent); font-weight: 500; }
+.accept b { display: block; }
+.accept span.t { font-size: 0.9rem; color: var(--ink-2); }
+.callout { border: 1px solid var(--line); border-left: 4px solid var(--accent); background: var(--surface); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 8px; }
+.callout.warn { border-left-color: var(--note-line); background: var(--note-bg); }
+.twocol { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 16px 28px; }
+.twocol ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 4px; font-size: 0.92rem; color: var(--ink-2); }
+.figure { font-family: var(--font-display); font-stretch: 85%; font-weight: 760; font-size: 1.6rem; line-height: 1; color: var(--ink); }
+.sla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.sla div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 6px; min-width: 0; }
+.sla span { font-size: 0.86rem; color: var(--ink-2); }
+@media (max-width: 520px) { .sla { grid-template-columns: 1fr; } }
+
+/* Direction */
+.direction { background: var(--surface); border: 1px solid var(--accent); border-radius: var(--radius); padding: 18px 20px; display: grid; gap: 12px; }
+.direction ol { margin: 0; padding-left: 1.2rem; display: grid; gap: 6px; }
+.direction .by { font-size: var(--step--1); color: var(--muted); }
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 12px; }
+.option { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 6px; align-content: start; background: var(--surface); }
+.option.chosen { border-color: var(--accent); }
+.option p { font-size: 0.88rem; color: var(--ink-2); }
+.option .tag { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+.option.chosen .tag { color: var(--accent); }
+
+/* Matrix chart */
+.stats { display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.stat { display: grid; gap: 2px; }
+.stat span { font-size: var(--step--1); color: var(--ink-2); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin: 0; padding: 0; font-size: 0.86rem; color: var(--ink-2); }
+.legend li { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.sw.c1 { background: var(--c1); } .sw.c2 { background: var(--c2); } .sw.c3 { background: var(--c3); } .sw.c4 { background: var(--c4); }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 14px; position: relative; }
+.chart-rows { display: grid; gap: 10px; }
+.crow { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: 12px; align-items: center; }
+.crow .lab { font-size: 0.88rem; line-height: 1.25; min-width: 0; }
+.crow .lab small { display: block; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.stack { display: flex; gap: 2px; height: 18px; flex: none; }
+.seg { height: 100%; min-width: 3px; cursor: default; }
+.seg:last-child { border-radius: 0 4px 4px 0; }
+.seg.c1 { background: var(--c1); } .seg.c2 { background: var(--c2); } .seg.c3 { background: var(--c3); } .seg.c4 { background: var(--c4); }
+.seg:hover, .seg:focus-visible { filter: brightness(1.12); }
+.tot { font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.2; color: var(--ink-2); font-variant-numeric: tabular-nums; min-width: 0; }
+@media (max-width: 600px) {
+  .crow { grid-template-columns: 1fr; gap: 4px; }
+}
+.tip {
+  position: absolute; z-index: 5; pointer-events: none;
+  background: var(--ink); color: var(--bg);
+  font-size: 0.8rem; line-height: 1.35; padding: 6px 9px; border-radius: 4px;
+  max-width: 16rem; transform: translate(-50%, calc(-100% - 8px));
+}
+details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+details summary { cursor: pointer; padding: 10px 14px; font-size: 0.9rem; color: var(--ink-2); }
+details .scroll { border: 0; border-top: 1px solid var(--line); border-radius: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Questions */
+.qs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 0 28px; }
+.qs li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 6px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 0.92rem; }
+.qs .qid { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); font-weight: 500; padding-top: 1px; }
+.qs b { font-weight: 650; }
+.owner { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-2); white-space: nowrap; }
+
+/* Timeline */
+.days { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.days li { padding: 14px; border-left: 1px solid var(--line); display: grid; gap: 6px; align-content: start; min-width: 0; }
+.days li:first-child { border-left: 0; }
+.days .d { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.days li.now { background: var(--accent-soft); }
+.days li.now .d { color: var(--accent); font-weight: 500; }
+.days li.due .d { color: var(--p2); font-weight: 500; }
+.days ul { margin: 0; padding-left: 1rem; font-size: 0.88rem; color: var(--ink-2); display: grid; gap: 3px; }
+.days .done { color: var(--ink); }
+@media (max-width: 720px) {
+  .days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .days li:nth-child(3) { border-left: 0; }
+  .days li:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+
+/* Phase build lists and diagrams */
+.phase-list { border-top: 3px solid var(--accent); padding-top: 12px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.phase-list.p2 { border-top-color: var(--p2); }
+.phase-list .chip { justify-self: start; }
+.phase-list ul { color: var(--ink); }
+.phase-list b { font-weight: 650; }
+figure { margin: 0; display: grid; gap: 10px; min-width: 0; }
+figcaption { display: grid; gap: 4px; }
+figcaption p { color: var(--ink-2); font-size: 0.92rem; }
+.diagram { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 12px; }
+.diagram svg { display: block; width: 100%; min-width: 660px; height: auto; font-family: var(--font-body); }
+.diagram text { fill: var(--ink); }
+.diagram text.q { fill: var(--ink-2); }
+.diagram text.b { font-weight: 600; }
+.diagram .a-plain { fill: none; stroke: var(--muted); stroke-width: 1.25; }
+.diagram .a-given { fill: none; stroke: var(--muted); stroke-width: 1.25; stroke-dasharray: 6 4; }
+.diagram .a-p1 { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.25; }
+.diagram .a-p2 { fill: var(--p2-soft); stroke: var(--p2); stroke-width: 1.25; }
+.diagram .o-p1 { fill: none; stroke: var(--accent); stroke-width: 1.25; }
+.diagram .o-p2 { fill: none; stroke: var(--p2); stroke-width: 1.25; }
+.diagram .o-main { fill: var(--accent); fill-opacity: 0.22; stroke-width: 2.5; }
+.diagram .conn path, .diagram .conn { fill: none; stroke: var(--muted); stroke-width: 1.25; }
+.diagram .dash { stroke-dasharray: 3 3; }
+.diagram .arrowhead, .diagram .gate { fill: var(--muted); stroke: none; }
+.diagram .actor { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.diagram .br-p1 { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.diagram .br-p2 { stroke: var(--p2); stroke-width: 2.5; fill: none; }
+.diagram .br-plain { stroke: var(--muted); stroke-width: 2.5; fill: none; }
+.scroll-hint { display: none; font-size: var(--step--1); color: var(--muted); }
+@media (max-width: 700px) { .scroll-hint { display: block; } }
+
+/* Files */
+.files { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.files li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 12px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.files li span.desc { grid-column: 1 / -1; font-size: 0.9rem; color: var(--ink-2); }
+.files .ver { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(--muted); display: grid; gap: 6px; }
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="eyebrow">Allion Technologies · Bid briefing · Internal</p>
+    <h1>CICT Legal &amp; Compliance AI Assistant</h1>
+    <p class="lede">What we have understood so far from CICT's requirements, where the fixed-price risk sits, and how we plan to answer.</p>
+    <dl class="manifest">
+      <div><dt>Procurement ref</dt><dd>RFQ 114367</dd></div>
+      <div><dt>Client</dt><dd>Colombo International Container Terminals (CICT)</dd></div>
+      <div><dt>Asked for</dt><dd>Fixed-price quote incl. 1 year O&amp;M</dd></div>
+      <div><dt>Due</dt><dd>Thu 12 Nov 2026</dd></div>
+      <div><dt>Bid owner</dt><dd>Rushanthi</dd></div>
+      <div><dt>Page as of</dt><dd>Tue 10 Nov 2026</dd></div>
+    </dl>
+    <p class="internal"><strong>Internal to Allion.</strong> Contains CICT's requirements and our bid position. Please don't forward outside the bid team. Built from CICT's specification with AI help and still under review, so check the specification wording before quoting anything back to CICT.</p>
+  </div>
+</header>
+
+<div class="layout wrap">
+  <aside class="toc" aria-label="Sections">
+    <nav>
+      <p>On this page</p>
+      <ol id="toc">
+        <li><a href="#summary">In one minute</a></li>
+        <li><a href="#scope">What CICT wants</a></li>
+        <li><a href="#build">Phase 1 and Phase 2 builds</a></li>
+        <li><a href="#users">Who uses it, for what</a></li>
+        <li><a href="#flow">How a request moves</a></li>
+        <li><a href="#platform">Rules for every module</a></li>
+        <li><a href="#acceptance">How CICT will accept it</a></li>
+        <li><a href="#risks">Fixed-price risks</a></li>
+        <li><a href="#direction">Our direction</a></li>
+        <li><a href="#assumptions">Assumptions</a></li>
+        <li><a href="#matrix">Compliance matrix</a></li>
+        <li><a href="#questions">Open questions</a></li>
+        <li><a href="#timeline">Path to 12 Nov</a></li>
+        <li><a href="#files">Working files</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <nav class="minitoc" aria-label="Sections">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#summary">In one minute</a></li>
+        <li><a href="#scope">What CICT wants</a></li>
+        <li><a href="#build">Phase 1 and Phase 2 builds</a></li>
+        <li><a href="#users">Who uses it, for what</a></li>
+        <li><a href="#flow">How a request moves</a></li>
+        <li><a href="#platform">Rules for every module</a></li>
+        <li><a href="#acceptance">How CICT will accept it</a></li>
+        <li><a href="#risks">Fixed-price risks</a></li>
+        <li><a href="#direction">Our direction</a></li>
+        <li><a href="#assumptions">Assumptions</a></li>
+        <li><a href="#matrix">Compliance matrix</a></li>
+        <li><a href="#questions">Open questions</a></li>
+        <li><a href="#timeline">Path to 12 Nov</a></li>
+        <li><a href="#files">Working files</a></li>
+      </ol>
+    </nav>
+
+    <section id="summary">
+      <p class="kicker">Start here</p>
+      <h2>In one minute</h2>
+      <ul class="points">
+        <li><b>The product</b><span>One AI assistant platform for CICT's legal, compliance and risk, policy, board and records teams. It drafts, checks, translates and finds. Authorised CICT staff confirm every opinion, risk finding, policy and approval.</span></li>
+        <li><b>Two phases</b><span>Phase 1 is the shared platform plus contract management, records management and common support, and must work on its own. Phase 2 adds legal affairs, policy management, compliance and risk control, and board affairs. One year of 24/7 support sits inside the price.</span></li>
+        <li><b>The hard part</b><span>The platform more than the screens: data classification and masking, a gateway over several AI models, Chinese, English and Sinhala throughout, answers that cite the exact clause or page, and strict rules on where data may go.</span></li>
+        <li><b>The main risk</b><span>User numbers, response times, uptime and recovery targets are all left "to be defined", yet they become the acceptance bar. We would be fixing a price before the target is fixed.</span></li>
+        <li><b>Our direction</b><span>Quote both phases at fixed prices. Phase 1 opens with a Discovery milestone that pins down the open numbers. The Phase 2 price holds on stated assumptions, and material changes go through change control.</span></li>
+      </ul>
+    </section>
+
+    <section id="scope">
+      <p class="kicker">Scope · §3.1 to §3.8</p>
+      <h2>What CICT wants</h2>
+      <p class="sub">Phase labels follow the specification's headings. The platform rules in Chapters 1 and 2 apply to both phases <span class="ref">§3.8.1</span>. Row counts come from our compliance matrix.</p>
+      <div class="phases">
+        <div>
+          <div class="phase-head"><span class="chip">Phase 1</span><p>Usable on its own, including import of existing historical material</p></div>
+          <div class="modules">
+            <article class="module">
+              <div class="module-top"><h3>Platform and AI foundation</h3><span class="ref">Ch 1–2</span></div>
+              <p>Browser app in Chinese, English and Sinhala. Permissions by role, department, data category and task. Masking engine. Versioned knowledge base with effective dates. Search in three languages. Answers with clause and page citations. Model gateway with usage and cost tracking. OCR with user correction.</p>
+              <span class="rows">91 rows · applies to both phases</span>
+            </article>
+            <article class="module">
+              <div class="module-top"><h3>Contract management</h3><span class="ref">§3.1</span></div>
+              <p>Counterparty due diligence. Drafting from templates. Contract review against a configurable checklist. Contract register with obligation and performance tracking. Records, milestones and deadline reminders. Migration within confirmed scope, ahead of a later LAMS upgrade.</p>
+              <span class="rows">40 rows</span>
+            </article>
+            <article class="module">
+              <div class="module-top"><h3>Records management</h3><span class="ref">§3.6</span></div>
+              <p>One archive linked to business matters. Search and Q&amp;A with citations. Versions and permissions. Retention periods, disposal holds, and bulk import of historical records with error reports.</p>
+              <span class="rows">18 rows</span>
+            </article>
+            <article class="module">
+              <div class="module-top"><h3>Common support</h3><span class="ref">§3.7</span></div>
+              <p>Roles and permissions. Personal workspace and notifications. Reports exported to PDF, Word or Excel. Audit logs and the administration console.</p>
+              <span class="rows">18 rows</span>
+            </article>
+          </div>
+        </div>
+        <div>
+          <div class="phase-head p2"><span class="chip p2">Phase 2</span><p>Delivered with its own links, statistics and notifications in records and common support</p></div>
+          <div class="modules">
+            <article class="module">
+              <div class="module-top"><h3>Legal affairs</h3><span class="ref">§3.2</span></div>
+              <p>Case and dispute register with risk analysis. Draft legal memos. Impact analysis of new bills. Translation between Chinese, English and Sinhala with a terminology database. Daily monitoring of official Sri Lankan sources.</p>
+              <span class="rows">19 rows</span>
+            </article>
+            <article class="module">
+              <div class="module-top"><h3>Policy management</h3><span class="ref">§3.3</span></div>
+              <p>Policy register. Drafting and clause-by-clause comparison. Consistency checks against headquarters and other company policies. Workflow from drafting to repeal. Review reminders. Policy Q&amp;A.</p>
+              <span class="rows">20 rows</span>
+            </article>
+            <article class="module">
+              <div class="module-top"><h3>Compliance and risk control</h3><span class="ref">§3.4</span></div>
+              <p>Contracts compared with payments, tariff waivers and rebates to flag bribery-related anomalies. OFAC and EU sanctions and export control screening. Compliance checks with remediation. Internal control testing. Approval checks for key positions.</p>
+              <span class="rows">27 rows</span>
+            </article>
+            <article class="module">
+              <div class="module-top"><h3>Board affairs</h3><span class="ref">§3.5</span></div>
+              <p>Agenda submissions checked for approval authority, required documents, related-party transactions and completeness. Meeting document templates. Search of past board material.</p>
+              <span class="rows">8 rows</span>
+            </article>
+          </div>
+        </div>
+        <div>
+          <div class="phase-head yr"><span class="chip yr">Year 1</span><p>Inside the quoted price</p></div>
+          <div class="modules">
+            <article class="module">
+              <div class="module-top"><h3>Operation and maintenance</h3><span class="ref">§3.8.3</span></div>
+              <p>24/7 response cover for a year. Routine issues answered within 24 hours, urgent failures supported within 4 hours. Severity levels, repair deadlines and costs go in the contract.</p>
+              <span class="rows">6 rows · plus 25 rows on phasing, delivery and acceptance</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="build">
+      <p class="kicker">Phasing · §3.8.1</p>
+      <h2>What we build in Phase 1 and in Phase 2</h2>
+      <p class="sub">Phase 1 builds the whole shared platform plus three modules, so CICT can use it on its own. Phase 2 adds four business modules on that same platform. The diagrams below match the proposal draft, redrawn for this page. To click through both phases, open the <a href="prototype.html">clickable prototype</a>.</p>
+      <div class="twocol">
+        <div class="phase-list">
+          <span class="chip">Phase 1 build</span>
+          <ul>
+            <li><b>Discovery first:</b> confirm volumes, cloud, models and the test plan</li>
+            <li><b>Shared platform:</b> file parsing and OCR, classification, masking, retrieval within access rights, the model gateway, and a self-hosted model for confidential material</li>
+            <li><b>Data:</b> restricted originals, masked copies and ID mappings, a versioned knowledge base, search indexes, the records archive</li>
+            <li><b>Across every layer:</b> permissions, audit logs, health dashboard, backups, upgrades and rollback</li>
+            <li><b>Modules:</b> contract management, records management with historical import, common support and the admin console</li>
+          </ul>
+        </div>
+        <div class="phase-list p2">
+          <span class="chip p2">Phase 2 build</span>
+          <ul>
+            <li><b>Legal affairs:</b> cases and disputes, legal memos, new bills, legal translation, daily regulatory monitoring</li>
+            <li><b>Policy management:</b> register, drafting and redlines, headquarters alignment, approval workflow, policy Q&amp;A</li>
+            <li><b>Compliance and risk control:</b> bribery anomaly checks, sanctions and export control screening, control testing, key-position approval checks</li>
+            <li><b>Board affairs:</b> agenda checks, meeting papers, meeting search</li>
+            <li><b>Phase 2 hooks</b> in records and common support: links, statistics, tasks and notifications <span class="ref">§3.8.1</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <figure>
+        <figcaption>
+          <h3>Architecture: who builds each part, and when</h3>
+          <p>Nothing reaches an AI model until it is classified and masked. External models are reached only through the gateway.</p>
+        </figcaption>
+        <div class="diagram">
+          <svg viewBox="0 60 760 676" role="img" aria-label="Architecture layers inside the CICT-approved cloud, coloured by the phase in which Allion builds each part" font-size="13">
+            <defs><marker id="arch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
+            <rect x="24" y="68" width="712" height="56" rx="8" class="a-plain"/>
+            <text x="380" y="92" text-anchor="middle" class="b">Users in a browser</text>
+            <text x="380" y="108" text-anchor="middle" font-size="11.5" class="q">Legal, compliance, policy, Company Secretary, records, administrators · Chinese, English or Sinhala</text>
+            <rect x="24" y="144" width="712" height="464" rx="8" class="a-given"/>
+            <text x="380" y="166" text-anchor="middle" class="b">CICT-approved cloud environment</text>
+            <rect x="40" y="180" width="332" height="88" rx="8" class="a-p1"/>
+            <text x="56" y="204" class="b">Phase 1 modules</text>
+            <text x="56" y="220" font-size="11.5">Contract management</text>
+            <text x="56" y="236" font-size="11.5">Records management</text>
+            <text x="56" y="252" font-size="11.5">Common support and admin console</text>
+            <rect x="388" y="180" width="332" height="88" rx="8" class="a-p2"/>
+            <text x="404" y="204" class="b">Phase 2 modules</text>
+            <text x="404" y="220" font-size="11.5">Legal affairs · Policy management</text>
+            <text x="404" y="236" font-size="11.5">Compliance and risk control</text>
+            <text x="404" y="252" font-size="11.5">Board affairs</text>
+            <rect x="40" y="292" width="680" height="140" rx="8" class="a-plain"/>
+            <text x="56" y="314" class="b">AI orchestration</text>
+            <text x="56" y="402" font-size="11.5" class="q">Dates, amounts and time limits are checked by fixed rules.</text>
+            <text x="56" y="418" font-size="11.5" class="q">Every result cites document, clause and page.</text>
+            <rect x="56" y="328" width="117" height="52" rx="8" class="a-p1"/>
+            <text x="114.5" y="350" text-anchor="middle" font-size="11.5" class="b">Parse files</text>
+            <text x="114.5" y="366" text-anchor="middle" font-size="11.5" class="q">and run OCR</text>
+            <rect x="189" y="328" width="117" height="52" rx="8" class="a-p1"/>
+            <text x="247.5" y="350" text-anchor="middle" font-size="11.5" class="b">Classify</text>
+            <text x="247.5" y="366" text-anchor="middle" font-size="11.5" class="q">by category</text>
+            <rect x="322" y="328" width="117" height="52" rx="8" class="a-p1"/>
+            <text x="380.5" y="350" text-anchor="middle" font-size="11.5" class="b">Find and mask</text>
+            <text x="380.5" y="366" text-anchor="middle" font-size="11.5">sensitive data</text>
+            <rect x="455" y="328" width="117" height="52" rx="8" class="a-p1"/>
+            <text x="513.5" y="350" text-anchor="middle" font-size="11.5" class="b">Retrieve</text>
+            <text x="513.5" y="366" text-anchor="middle" font-size="11.5" class="q">within access</text>
+            <rect x="588" y="328" width="117" height="52" rx="8" class="a-p1"/>
+            <text x="646.5" y="350" text-anchor="middle" font-size="11.5" class="b">Model gateway</text>
+            <text x="646.5" y="366" text-anchor="middle" font-size="11.5" class="q">approved only</text>
+            <rect x="40" y="456" width="500" height="88" rx="8" class="a-p1"/>
+            <text x="56" y="480" class="b">Data and knowledge</text>
+            <text x="56" y="496" font-size="11.5">Original files, restricted · Masked copies and ID mappings</text>
+            <text x="56" y="512" font-size="11.5">Knowledge base with versions and effective dates</text>
+            <text x="56" y="528" font-size="11.5">Full-text and semantic search indexes · Records archive</text>
+            <rect x="556" y="456" width="164" height="88" rx="8" class="a-p1"/>
+            <text x="638" y="480" text-anchor="middle" class="b">Self-hosted model</text>
+            <text x="638" y="496" text-anchor="middle" font-size="11.5" class="q">For confidential</text>
+            <text x="638" y="512" text-anchor="middle" font-size="11.5" class="q">material</text>
+            <rect x="40" y="560" width="680" height="32" rx="8" class="a-p1"/>
+            <text x="380" y="580" text-anchor="middle" font-size="11.5">Across every layer: permissions, audit logs, health dashboard, backups, upgrades and rollback</text>
+            <rect x="488" y="632" width="248" height="88" rx="8" class="a-given"/>
+            <text x="612" y="656" text-anchor="middle" class="b">Approved external models</text>
+            <text x="612" y="672" text-anchor="middle" font-size="11.5" class="q">For example GPT, Claude, Gemini,</text>
+            <text x="612" y="688" text-anchor="middle" font-size="11.5" class="q">DeepSeek or Kimi</text>
+            <text x="612" y="704" text-anchor="middle" font-size="11.5">Masked content only</text>
+            <text x="720" y="624" text-anchor="end" font-size="11.5" class="q">leaves the boundary only after masking</text>
+            <text x="24" y="648" font-size="11.5" class="b">Who builds each part, and when</text>
+            <rect x="24" y="660" width="28" height="16" rx="8" class="a-p1"/>
+            <text x="62" y="672" font-size="11.5">Allion builds in Phase 1</text>
+            <rect x="24" y="686" width="28" height="16" rx="8" class="a-p2"/>
+            <text x="62" y="698" font-size="11.5">Allion builds in Phase 2</text>
+            <rect x="24" y="712" width="28" height="16" rx="8" class="a-given"/>
+            <text x="62" y="724" font-size="11.5">Provided by CICT or a model provider</text>
+            <g class="conn">
+              <path d="M206 124V180" marker-end="url(#arch-arrow)"/>
+              <path d="M554 124V180" marker-end="url(#arch-arrow)"/>
+              <path d="M206 268V292" marker-end="url(#arch-arrow)"/>
+              <path d="M554 268V292" marker-end="url(#arch-arrow)"/>
+              <path d="M173 354H189" marker-end="url(#arch-arrow)"/>
+              <path d="M306 354H322" marker-end="url(#arch-arrow)"/>
+              <path d="M439 354H455" marker-end="url(#arch-arrow)"/>
+              <path d="M572 354H588" marker-end="url(#arch-arrow)"/>
+              <path d="M513.5 380V456" marker-start="url(#arch-arrow)" marker-end="url(#arch-arrow)"/>
+              <path d="M646.5 380V456" marker-end="url(#arch-arrow)"/>
+              <path d="M705 354H728V632" marker-end="url(#arch-arrow)"/>
+            </g>
+          </svg>
+        </div>
+        <p class="scroll-hint">Scroll sideways to see the whole diagram.</p>
+      </figure>
+
+      <figure>
+        <figcaption>
+          <h3>Delivery plan: each phase closes at an acceptance gate</h3>
+          <p>Discovery is the first Phase 1 milestone and fixes the open numbers. Not to scale; durations come with the estimate.</p>
+        </figcaption>
+        <div class="diagram">
+          <svg viewBox="0 40 760 290" role="img" aria-label="Delivery stages: Discovery and Phase 1 build, then Phase 2 build, then year-1 support, with an acceptance gate after each" font-size="13">
+            <defs><marker id="plan-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
+            <path d="M24 68H368" class="br-p1"/>
+            <text x="24" y="60" font-size="12" class="b">Phase 1</text>
+            <path d="M392 68H552" class="br-p2"/>
+            <text x="392" y="60" font-size="12" class="b">Phase 2</text>
+            <path d="M576 68H736" class="br-plain"/>
+            <text x="576" y="60" font-size="12" class="b">Year 1</text>
+            <rect x="24" y="80" width="160" height="112" rx="8" class="a-p1"/>
+            <text x="40" y="104" class="b">Discovery</text>
+            <text x="40" y="120" font-size="11.5" class="q">[weeks TBC]</text>
+            <text x="40" y="144" font-size="11.5">Confirm volumes,</text>
+            <text x="40" y="160" font-size="11.5">cloud and models</text>
+            <text x="40" y="176" font-size="11.5">Agree the test plan</text>
+            <rect x="208" y="80" width="160" height="112" rx="8" class="a-p1"/>
+            <text x="224" y="104" class="b">Phase 1 build</text>
+            <text x="224" y="120" font-size="11.5" class="q">[months TBC]</text>
+            <text x="224" y="144" font-size="11.5">Platform and masking</text>
+            <text x="224" y="160" font-size="11.5">Contracts, records</text>
+            <text x="224" y="176" font-size="11.5">Historical import</text>
+            <rect x="392" y="80" width="160" height="112" rx="8" class="a-p2"/>
+            <text x="408" y="104" class="b">Phase 2 build</text>
+            <text x="408" y="120" font-size="11.5" class="q">[months TBC]</text>
+            <text x="408" y="144" font-size="11.5">Legal affairs, policy</text>
+            <text x="408" y="160" font-size="11.5">Compliance and risk</text>
+            <text x="408" y="176" font-size="11.5">Board affairs</text>
+            <rect x="576" y="80" width="160" height="112" rx="8" class="a-plain"/>
+            <text x="592" y="104" class="b">Year-1 support</text>
+            <text x="592" y="120" font-size="11.5" class="q">12 months</text>
+            <text x="592" y="144" font-size="11.5">24/7 cover</text>
+            <text x="592" y="160" font-size="11.5">Fixes and patches</text>
+            <text x="592" y="176" font-size="11.5">Monthly reports</text>
+            <path d="M24 216H736" class="conn" marker-end="url(#plan-arrow)"/>
+            <path d="M196 192V206M380 192V206M564 192V206" class="conn dash"/>
+            <path d="M196 206l10 10l-10 10l-10 -10z" class="gate"/>
+            <path d="M380 206l10 10l-10 10l-10 -10z" class="gate"/>
+            <path d="M564 206l10 10l-10 10l-10 -10z" class="gate"/>
+            <text x="196" y="248" text-anchor="middle" font-size="11.5" class="b">Discovery sign-off</text>
+            <text x="196" y="264" text-anchor="middle" font-size="11.5" class="q">pass marks agreed</text>
+            <text x="380" y="248" text-anchor="middle" font-size="11.5" class="b">Phase 1 acceptance</text>
+            <text x="380" y="264" text-anchor="middle" font-size="11.5" class="q">Phase 1 tests passed</text>
+            <text x="564" y="248" text-anchor="middle" font-size="11.5" class="b">Phase 2 acceptance</text>
+            <text x="564" y="264" text-anchor="middle" font-size="11.5" class="q">Phase 2 tests passed</text>
+            <text x="24" y="300" font-size="11.5" class="q">Not to scale. Durations come with the delivery estimate.</text>
+            <text x="24" y="316" font-size="11.5" class="q">Drawn with support starting at final acceptance; if it starts at Phase 1 go-live, it runs alongside Phase 2.</text>
+          </svg>
+        </div>
+        <p class="scroll-hint">Scroll sideways to see the whole diagram.</p>
+      </figure>
+      <p class="sub">Our reading, to confirm: legal translation is a Phase 2 feature, so the translation acceptance test most likely sits at the Phase 2 gate, not Phase 1.</p>
+    </section>
+
+    <section id="users">
+      <p class="kicker">Use cases · §1.1</p>
+      <h2>Who uses it, and for what</h2>
+      <ul class="roles" aria-label="Primary users">
+        <li>Legal staff</li>
+        <li>Compliance and risk control staff</li>
+        <li>Policy owners</li>
+        <li>Company Secretary</li>
+        <li>Business department staff</li>
+        <li>System administrators</li>
+        <li>Auditors <span class="ref">§3.7.4</span></li>
+      </ul>
+      <figure>
+        <figcaption>
+          <h3>Who uses each module, with every result confirmed by a reviewer</h3>
+          <p>Use-case diagram from the proposal draft. Colour shows the delivery phase.</p>
+        </figcaption>
+        <div class="diagram">
+          <svg viewBox="0 48 760 740" role="img" aria-label="Use-case diagram: eight user groups linked to seven packages, coloured by delivery phase" font-size="11.5">
+            <rect x="152" y="56" width="464" height="684" rx="8" class="a-plain"/>
+            <text x="168" y="80" font-size="13" class="b">CICT Legal &amp; Compliance AI Assistant</text>
+            <text x="632" y="100" class="b">Delivery phase</text>
+            <rect x="632" y="112" width="28" height="16" rx="8" class="a-p1"/>
+            <text x="668" y="124">Phase 1</text>
+            <rect x="632" y="138" width="28" height="16" rx="8" class="a-p2"/>
+            <text x="668" y="150">Phase 2</text>
+            <g class="conn">
+              <path d="M92 178L168 132"/><path d="M92 178L168 224"/><path d="M92 290L168 304"/><path d="M92 382L168 328"/>
+              <path d="M92 640L168 676"/><path d="M92 732L168 700"/><path d="M668 408H600"/><path d="M668 500H600"/><path d="M668 640L600 684"/>
+            </g>
+            <rect x="168" y="92" width="432" height="80" rx="8" class="a-p1"/>
+            <text x="180" y="114" font-size="13" class="b">Contracts</text>
+            <text x="588" y="114" text-anchor="end" class="q">Phase 1</text>
+            <ellipse cx="244" cy="144" rx="64" ry="18" class="o-p1"/><text x="244" y="148" text-anchor="middle">Due diligence</text>
+            <ellipse cx="384" cy="144" rx="64" ry="18" class="o-p1"/><text x="384" y="148" text-anchor="middle">Draft and review</text>
+            <ellipse cx="524" cy="144" rx="64" ry="18" class="o-p1"/><text x="524" y="148" text-anchor="middle">Track deadlines</text>
+            <rect x="168" y="184" width="432" height="80" rx="8" class="a-p2"/>
+            <text x="180" y="206" font-size="13" class="b">Legal affairs</text>
+            <text x="588" y="206" text-anchor="end" class="q">Phase 2</text>
+            <ellipse cx="244" cy="236" rx="64" ry="18" class="o-p2"/><text x="244" y="240" text-anchor="middle">Analyse cases</text>
+            <ellipse cx="384" cy="236" rx="64" ry="18" class="o-p2"/><text x="384" y="240" text-anchor="middle">Draft legal memos</text>
+            <ellipse cx="524" cy="236" rx="64" ry="18" class="o-p2"/><text x="524" y="240" text-anchor="middle">Legal translation</text>
+            <rect x="168" y="276" width="432" height="80" rx="8" class="a-p2"/>
+            <text x="180" y="298" font-size="13" class="b">Compliance and risk control</text>
+            <text x="588" y="298" text-anchor="end" class="q">Phase 2</text>
+            <ellipse cx="244" cy="328" rx="64" ry="18" class="o-p2"/><text x="244" y="332" text-anchor="middle">Bribery checks</text>
+            <ellipse cx="384" cy="328" rx="64" ry="18" class="o-p2"/><text x="384" y="332" text-anchor="middle">Screen sanctions</text>
+            <ellipse cx="524" cy="328" rx="64" ry="18" class="o-p2"/><text x="524" y="332" text-anchor="middle">Test controls</text>
+            <rect x="168" y="368" width="432" height="80" rx="8" class="a-p2"/>
+            <text x="180" y="390" font-size="13" class="b">Policy management</text>
+            <text x="588" y="390" text-anchor="end" class="q">Phase 2</text>
+            <ellipse cx="244" cy="420" rx="64" ry="18" class="o-p2"/><text x="244" y="424" text-anchor="middle">Draft policies</text>
+            <ellipse cx="384" cy="420" rx="64" ry="18" class="o-p2"/><text x="384" y="424" text-anchor="middle">Check HQ alignment</text>
+            <ellipse cx="524" cy="420" rx="64" ry="18" class="o-p2"/><text x="524" y="424" text-anchor="middle">Answer questions</text>
+            <rect x="168" y="460" width="432" height="80" rx="8" class="a-p2"/>
+            <text x="180" y="482" font-size="13" class="b">Board affairs</text>
+            <text x="588" y="482" text-anchor="end" class="q">Phase 2</text>
+            <ellipse cx="244" cy="512" rx="64" ry="18" class="o-p2"/><text x="244" y="516" text-anchor="middle">Check agenda items</text>
+            <ellipse cx="384" cy="512" rx="64" ry="18" class="o-p2"/><text x="384" y="516" text-anchor="middle">Meeting papers</text>
+            <ellipse cx="524" cy="512" rx="64" ry="18" class="o-p2"/><text x="524" y="516" text-anchor="middle">Search meetings</text>
+            <rect x="168" y="552" width="432" height="80" rx="8" class="a-p1"/>
+            <text x="180" y="574" font-size="13" class="b">Records management</text>
+            <text x="588" y="574" text-anchor="end" class="q">Phase 1, all users</text>
+            <ellipse cx="244" cy="604" rx="64" ry="18" class="o-p1"/><text x="244" y="608" text-anchor="middle">Archive records</text>
+            <ellipse cx="384" cy="604" rx="64" ry="18" class="o-p1"/><text x="384" y="608" text-anchor="middle">Search and ask</text>
+            <ellipse cx="524" cy="604" rx="64" ry="18" class="o-p1"/><text x="524" y="608" text-anchor="middle">Set retention</text>
+            <rect x="168" y="644" width="432" height="80" rx="8" class="a-p1"/>
+            <text x="180" y="666" font-size="13" class="b">Shared platform</text>
+            <text x="588" y="666" text-anchor="end" class="q">Phase 1</text>
+            <ellipse cx="244" cy="696" rx="64" ry="18" class="o-p1"/><text x="244" y="700" text-anchor="middle">Manage settings</text>
+            <ellipse cx="384" cy="696" rx="64" ry="18" class="o-p1"/><text x="384" y="700" text-anchor="middle">Query audit logs</text>
+            <ellipse cx="524" cy="696" rx="64" ry="18" class="o-p1 o-main"/><text x="524" y="700" text-anchor="middle" class="b">Review and confirm</text>
+            <g class="actor">
+              <circle cx="76" cy="164" r="7"/><path d="M76 171V188M65 178H87M76 188L68 200M76 188L84 200"/>
+              <circle cx="76" cy="276" r="7"/><path d="M76 283V300M65 290H87M76 300L68 312M76 300L84 312"/>
+              <circle cx="76" cy="368" r="7"/><path d="M76 375V392M65 382H87M76 392L68 404M76 392L84 404"/>
+              <circle cx="76" cy="626" r="7"/><path d="M76 633V650M65 640H87M76 650L68 662M76 650L84 662"/>
+              <circle cx="76" cy="718" r="7"/><path d="M76 725V742M65 732H87M76 742L68 754M76 742L84 754"/>
+              <circle cx="684" cy="394" r="7"/><path d="M684 401V418M673 408H695M684 418L676 430M684 418L692 430"/>
+              <circle cx="684" cy="486" r="7"/><path d="M684 493V510M673 500H695M684 510L676 522M684 510L692 522"/>
+              <circle cx="684" cy="626" r="7"/><path d="M684 633V650M673 640H695M684 650L676 662M684 650L692 662"/>
+            </g>
+            <text x="76" y="216" text-anchor="middle">Legal staff</text>
+            <text x="76" y="328" text-anchor="middle">Business</text>
+            <text x="76" y="342" text-anchor="middle">departments</text>
+            <text x="76" y="420" text-anchor="middle">Compliance and</text>
+            <text x="76" y="434" text-anchor="middle">risk staff</text>
+            <text x="76" y="678" text-anchor="middle">Administrator</text>
+            <text x="76" y="770" text-anchor="middle">Auditor</text>
+            <text x="684" y="446" text-anchor="middle">Policy owners</text>
+            <text x="684" y="538" text-anchor="middle">Company</text>
+            <text x="684" y="552" text-anchor="middle">Secretary</text>
+            <text x="684" y="678" text-anchor="middle">Specialist</text>
+            <text x="684" y="692" text-anchor="middle">reviewer</text>
+          </svg>
+        </div>
+        <p class="scroll-hint">Scroll sideways to see the whole diagram.</p>
+      </figure>
+      <div class="scroll">
+        <table class="cases">
+          <thead><tr><th>Area</th><th>What they do with it</th><th>What they get back</th><th>Phase</th></tr></thead>
+          <tbody>
+            <tr><td>Legal</td><td>Contract review and drafting, spotting contracts signed after work started or backdated, contract records and expiry reminders</td><td>Risk lists, proposed revisions, draft contracts, performance reminders</td><td><span class="chip">1</span></td></tr>
+            <tr><td>Records</td><td>Archive and ask questions of historical board, legal, compliance, risk, audit and policy material</td><td>Classified records, summaries, answers with sources</td><td><span class="chip">1</span></td></tr>
+            <tr><td>Legal</td><td>Case and dispute analysis, draft legal advice, assessing new bills</td><td>Case reports, legal memos, draft impact assessments</td><td><span class="chip p2">2</span></td></tr>
+            <tr><td>Legal</td><td>Translating legal documents between Chinese, English and Sinhala</td><td>Side-by-side translations, terminology alerts, translation records</td><td><span class="chip p2">2</span></td></tr>
+            <tr><td>Compliance</td><td>Comparing contracts with payments, tariff waivers, rebates and other data</td><td>Anomaly lists and recommended checks</td><td><span class="chip p2">2</span></td></tr>
+            <tr><td>Compliance</td><td>Policy compliance review, tracking regulatory changes, sanctions and export control screening</td><td>Gap reports, regulatory alerts, screening records</td><td><span class="chip p2">2</span></td></tr>
+            <tr><td>Compliance</td><td>Internal control testing, audit remediation tracking, approval checks for key positions</td><td>Test records, risk alerts, remediation registers</td><td><span class="chip p2">2</span></td></tr>
+            <tr><td>Policy</td><td>Drafting and revising, aligning with headquarters, consistency checks, issuing, versioning, answering policy questions</td><td>Draft policies, comparison drafts, conflict lists, registers, reminders, answers with sources</td><td><span class="chip p2">2</span></td></tr>
+            <tr><td>Board</td><td>Reviewing agenda submissions, related-party alerts, meeting templates, searching past material</td><td>Agenda checklists, draft meeting documents, search results</td><td><span class="chip p2">2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub">The contract-signing check (signed after work started, or backdated) appears only in this use-case table, not in the contract module section. We have kept it in scope.</p>
+    </section>
+
+    <section id="flow">
+      <p class="kicker">Data handling · §1.2 to §2.4</p>
+      <h2>How a request moves through the system</h2>
+      <p class="sub">Our reading of the specification as one path, from a user's question to a confirmed result. The highlighted steps are the ones that make this more than a chatbot.</p>
+      <ol class="flow">
+        <li><h3>Ask or upload</h3><p>Question, PDF, Word or Excel file, or imported business data. Scans go through OCR the user can correct. Unreadable parts are flagged, never skipped. <span class="ref">§1.2</span></p></li>
+        <li><h3>Classify</h3><p>The uploader labels the category and a business owner confirms it. The system never downgrades a classification on its own. <span class="ref">§1.3</span></p></li>
+        <li class="key"><h3>Find and mask</h3><p>Names, prices, accounts, contract numbers and more, across text, tables, attachments, comments, tracked changes and file properties. Consistent stand-in IDs; preview and correct. <span class="ref">§1.4</span></p></li>
+        <li class="key"><h3>Approve release</h3><p>Anything leaving the approved boundary needs CICT's approval. Masking alone is not permission to send. <span class="ref">§1.4.7</span></p></li>
+        <li><h3>Retrieve</h3><p>Search the versioned knowledge base in three languages, filtered by what this user may see, so answers never cite restricted material. <span class="ref">§2.2</span></p></li>
+        <li><h3>Analyse</h3><p>An approved model, chosen per business scenario, through one gateway. If it's down, switch to another approved model or tell the user. <span class="ref">§2.4</span></p></li>
+        <li><h3>Answer with sources</h3><p>Document, clause or page for every point. Facts, judgements and recommendations kept apart. Warnings when evidence is thin, conflicting or out of date. <span class="ref">§2.3</span></p></li>
+        <li class="key"><h3>Review and confirm</h3><p>Output stays a draft until authorised CICT staff edit, review and approve it. Confirmed results go to the records archive, and the requester is notified. <span class="ref">Intro §3.6</span></p></li>
+      </ol>
+      <h3>Four data categories set what each step may do</h3>
+      <div class="tiers">
+        <div class="tier"><div class="bar"></div><h3>Public</h3><p class="eg">Published laws, public standards, public company information</p><p>May sit in a public knowledge base, updated through approved channels.</p></div>
+        <div class="tier"><div class="bar"></div><h3>Internal</h3><p class="eg">Internal policies, routine registers, working documents</p><p>Company-approved cloud, access by department and position.</p></div>
+        <div class="tier"><div class="bar"></div><h3>Sensitive</h3><p class="eg">Contract prices, customer and payment data, personal data, unpublished board papers</p><p>Controlled environment, restricted access and export; masked and reviewed before wider use.</p></div>
+        <div class="tier"><div class="bar"></div><h3>Confidential</h3><p class="eg">Materials classed strictly confidential, major case files</p><p>Only where the environment meets the confidentiality rules. Otherwise no upload at all.</p></div>
+      </div>
+      <p class="flow-note">CICT says these categories are a starting point and it will confirm the final rules <span class="ref">§1.3</span>. The confidential tier may push us toward self-hosted models.</p>
+    </section>
+
+    <section id="platform">
+      <p class="kicker">Platform · Ch 1–2, §3.7</p>
+      <h2>Rules that apply to every module</h2>
+      <dl class="rules">
+        <div><dt>Three languages <span class="ref">§2.1 §2.2</span></dt><dd>Interface switches between Chinese, English and Sinhala. Full-text and semantic search work in all three.</dd></div>
+        <div><dt>Permissions everywhere <span class="ref">§1.5 §3.7.1</span></dt><dd>By role, department, data category and task, covering files, search, answers, reports and exports. No one can make themselves an administrator.</dd></div>
+        <div><dt>Model choice <span class="ref">§2.4</span></dt><dd>Connect, switch and upgrade models without vendor lock-in. Named examples: DeepSeek, Kimi, GPT, Claude, Gemini and Grok. Usage and cost visible per scenario.</dd></div>
+        <div><dt>Data stays inside <span class="ref">§1.5</span></dt><dd>Files, indexes, prompts, model inputs and outputs, logs and backups stay in the approved cloud. No training use without approval.</dd></div>
+        <div><dt>Honest answers <span class="ref">§2.3</span></dt><dd>Never invent laws, cases, clauses or data. Treat instructions hidden inside uploaded files as content, not commands.</dd></div>
+        <div><dt>Models earn their place <span class="ref">§2.3</span></dt><dd>Each model is validated on CICT's own samples and goes live only after meeting the agreed accuracy, language and speed targets.</dd></div>
+        <div><dt>Running it <span class="ref">§2.6 §3.7.4</span></dt><dd>Red, amber and green health dashboard with alerts. Upgrades with rollback. Admin console. Audit logs of logins, access, model calls, exports and permission changes.</dd></div>
+        <div><dt>Integrations <span class="ref">§2.6</span></dt><dd>API documentation plus working links to office systems, ERP, LAMS and others within confirmed scope. Each link is defined before build.</dd></div>
+      </dl>
+    </section>
+
+    <section id="acceptance">
+      <p class="kicker">Delivery and acceptance · §3.8.2</p>
+      <h2>How CICT will accept it</h2>
+      <p class="sub">CICT runs acceptance with confirmed business samples and test conditions. It covers at least these eight areas:</p>
+      <ol class="accept">
+        <li><span class="n">1</span><span><b>Business functions</b><span class="t">Every operation, output, citation and review step in the specification.</span></span></li>
+        <li><span class="n">2</span><span><b>Translation quality</b><span class="t">100 random sentences, Chinese into English and Sinhala, scored by hand.</span></span></li>
+        <li><span class="n">3</span><span><b>Masking and data boundaries</b><span class="t">Detection, previews, manual fixes, approval-based release, no unauthorised sends.</span></span></li>
+        <li><span class="n">4</span><span><b>User permissions</b><span class="t">Nobody reaches material or results outside their scope.</span></span></li>
+        <li><span class="n">5</span><span><b>Security</b><span class="t">Data leakage, prompt injection and prohibited outputs, against an agreed checklist.</span></span></li>
+        <li><span class="n">6</span><span><b>Knowledge and analysis</b><span class="t">Right law and policy versions, accurate citations, warnings when material is thin or conflicting.</span></span></li>
+        <li><span class="n">7</span><span><b>Performance and operations</b><span class="t">Continuous running, task recovery, backup restore, upgrades and rollback, against agreed metrics.</span></span></li>
+        <li><span class="n">8</span><span><b>Integration</b><span class="t">Real data transfer, permissions, sync and error handling. API documents alone don't pass.</span></span></li>
+      </ol>
+      <div class="callout warn">
+        <h3>The translation test is the sharpest single bar</h3>
+        <p>Minimum score of 4 out of 5 on Chinese to English and Chinese to Sinhala. The specification leaves sampling, scoring method and pass criteria to the acceptance plan, and says other translation directions are tested separately. Legal Sinhala is a weak spot for current models.</p>
+      </div>
+      <div class="twocol">
+        <div>
+          <h3>What CICT receives</h3>
+          <ul>
+            <li>Working system, admin console, model integration and an initial knowledge base</li>
+            <li>Source code, deployment and configuration documents</li>
+            <li>API documentation</li>
+            <li>Licences and cost breakdowns for models, cloud and third-party services</li>
+            <li>Deployment and data flow diagrams, and a list of external connections</li>
+            <li>User manuals, admin guides and training in Chinese and English</li>
+            <li>Test results and a known-issues list</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Support for the first year</h3>
+          <div class="sla">
+            <div><span class="figure">24/7</span><span>Response cover</span></div>
+            <div><span class="figure">24 h</span><span>Reply on routine issues</span></div>
+            <div><span class="figure">4 h</span><span>Support on urgent failures</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="risks">
+      <p class="kicker">Risk · internal only</p>
+      <h2>Why this is hard to fixed-price</h2>
+      <p class="sub">Twelve risks from our reading. The "A" and "Q" references point to the assumptions and the CICT questions further down.</p>
+      <div class="scroll">
+        <table class="risks">
+          <thead><tr><th>ID</th><th>Risk</th><th>Why it matters</th><th>How we handle it</th></tr></thead>
+          <tbody>
+            <tr><td class="id">R1</td><td><b>Acceptance bar set after the price</b><span class="ref">§2.5 §3.8.1 §3.8.2</span></td><td>Users, document sizes, response times, uptime and recovery targets are all "to be defined", and then form the basis for final acceptance.</td><td>State our assumed values in the proposal. Confirm them in Discovery. <span class="ref">A4 A19 · Q6</span></td></tr>
+            <tr><td class="id">R2</td><td><b>Translation acceptance</b><span class="ref">§3.8.2 item 2 §3.2.3</span></td><td>4 out of 5 on 100 hand-scored sentences, including Chinese to Sinhala. Other directions are tested separately, with criteria not yet set.</td><td>Spot-test two or three models before pricing. Terminology database and human post-editing. Tie acceptance to the selected model. <span class="ref">A9 · Q10 Q17</span></td></tr>
+            <tr><td class="id">R3</td><td><b>Cloud and model costs</b><span class="ref">§1.5 §2.4 §2.5</span></td><td>Unclear whether hosting, model usage or GPUs for self-hosted models sit inside our price.</td><td>Hosting and model usage as pass-through, or a capped allowance. <span class="ref">A1 A2 A3 · Q4 Q5</span></td></tr>
+            <tr><td class="id">R4</td><td><b>Integrations unscoped</b><span class="ref">§2.6 §3.3.4 §3.4.1</span></td><td>ERP, LAMS, office, approval, finance and commercial systems are named, and acceptance needs working links, not just API documents.</td><td>Each named integration as a priced option once scoped. <span class="ref">A7 A15 · Q7</span></td></tr>
+            <tr><td class="id">R5</td><td><b>Something may already exist</b><span class="ref">§3.8.1 §3.1.4 §3.1.5</span></td><td>"Existing functions" are to be checked, improved and accepted. Contract data must migrate "before the intelligent upgrade of LAMS". Extending a live system changes the effort a lot.</td><td>Ask before pricing. Assume a new build, with LAMS data import only. <span class="ref">A11 · Q3</span></td></tr>
+            <tr><td class="id">R6</td><td><b>Masking depth</b><span class="ref">§1.4</span></td><td>Covers tables, attachments, comments, tracked changes and file properties, with consistent stand-in IDs, separately stored mappings and approval before release. Entity detection on Sinhala text needs checking.</td><td>Size it as its own component. CICT sets the rules; we configure them. <span class="ref">A10</span></td></tr>
+            <tr><td class="id">R7</td><td><b>Content and data licences</b><span class="ref">§1.2 §3.1.1 §3.2.4 §3.4.2</span></td><td>Someone has to supply Sri Lankan laws, headquarters policies, templates and checklists. OFAC and EU lists are public; commercial risk, adverse media or registry data needs a licence.</td><td>CICT supplies content and licences; we load and integrate. <span class="ref">A5 A6 A16 · Q8 Q9</span></td></tr>
+            <tr><td class="id">R8</td><td><b>Historical migration and OCR</b><span class="ref">§1.2 §3.6.4 §3.8.1</span></td><td>Archive size unknown. Scanned Sinhala documents are hard for OCR.</td><td>Assume a volume, price batches above it. <span class="ref">A8 · Q6</span></td></tr>
+            <tr><td class="id">R9</td><td><b>24/7 support for a year</b><span class="ref">§3.8.3</span></td><td>Needs an on-call roster priced into a fixed bid.</td><td>Define severity levels and what O&amp;M covers. <span class="ref">A14 · Q12 Q18</span></td></tr>
+            <tr><td class="id">R10</td><td><b>Language deliverables</b><span class="ref">§2.1 §3.8.2</span></td><td>Interface in three languages; manuals and training in Chinese and English.</td><td>Confirm Chinese-language capability in-house or through a partner. <span class="ref">A12 · Q13</span></td></tr>
+            <tr><td class="id">R11</td><td><b>Source code handover</b><span class="ref">§3.8.2</span></td><td>Any reusable Allion component becomes CICT's unless licensed.</td><td>Settle our IP position before pricing. <span class="ref">A17 · Q14</span></td></tr>
+            <tr><td class="id">R12</td><td><b>Proposal time</b><span class="ref">RFQ</span></td><td>Seven days for a 45-section enterprise specification means low estimate confidence.</td><td>Discovery first; Phase 2 price held on stated assumptions. <span class="ref">A20 · Q2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="direction">
+      <p class="kicker">Bid shape</p>
+      <h2>Our direction</h2>
+      <div class="direction">
+        <ol>
+          <li>Quote <b>both phases</b>, each at a fixed price, plus the year of operation and maintenance.</li>
+          <li>Make <b>Discovery the first Phase 1 milestone</b>: confirm metrics, cloud, models, checklists and sample sets.</li>
+          <li>Hold the <b>Phase 2 price on the stated assumptions</b>, as confirmed in Discovery <span class="ref">A20</span>.</li>
+          <li>Send <b>material changes through change control</b>.</li>
+          <li>Pricing figures sit with <b>Rushanthi and Asiri</b>.</li>
+        </ol>
+        <p class="by">Direction set by Mishal on 9 Nov 2026, ahead of the internal discussion, which hasn't happened yet. Bid or no-bid is still Rushanthi and Asiri's call.</p>
+      </div>
+      <h3>Options we weighed</h3>
+      <div class="options">
+        <div class="option chosen"><span class="tag">Chosen shape</span><h3>A. Full fixed bid</h3><p>Both phases plus one year of O&amp;M, as asked. Matches the RFQ. Bounded by Discovery, assumptions and change control.</p></div>
+        <div class="option"><span class="tag">Not chosen</span><h3>B. Fixed Phase 1, indicative Phase 2</h3><p>Lower risk, but procurement may score a partial firm price lower.</p></div>
+        <div class="option"><span class="tag">Not chosen</span><h3>C. Paid Discovery first</h3><p>Best estimate, but procurement may not accept a two-step bid.</p></div>
+      </div>
+    </section>
+
+    <section id="assumptions">
+      <p class="kicker">Price basis · A1 to A21</p>
+      <h2>Assumptions that hold the price</h2>
+      <p class="sub">Draft wording from the compliance matrix, AI-drafted and not yet reviewed. These are what make a fixed price possible, so they belong in the proposal.</p>
+      <div class="scroll">
+        <table class="assume">
+          <thead><tr><th>ID</th><th>Topic</th><th>Assumption</th><th>Links</th></tr></thead>
+          <tbody>
+            <tr><td class="id">A1</td><td>Hosting</td><td>Deployed in a cloud environment CICT provides or approves. Cloud cost is pass-through, outside the fixed price. Allion sets up and runs the application there.</td><td>R3 · Q4</td></tr>
+            <tr><td class="id">A2</td><td>Model usage</td><td>Model API fees, or GPU hosting for self-hosted models, are pass-through on actuals or a capped allowance.</td><td>R3 · Q5</td></tr>
+            <tr><td class="id">A3</td><td>Model set</td><td>The gateway can take any provider with an API. The price covers integrating and validating up to three models agreed in Discovery. More are a priced option.</td><td>R3 · Q5</td></tr>
+            <tr><td class="id">A4</td><td>Performance metrics</td><td>The proposal states assumed values for users, document sizes, response times, availability, backup and recovery. Discovery confirms them; changes go through change control.</td><td>R1 · Q6</td></tr>
+            <tr><td class="id">A5</td><td>CICT content</td><td>CICT supplies and keeps current the laws, headquarters policies, CMP, Articles, internal policies, templates, checklists, terminology, related-party lists, case data and sample sets. Allion loads and configures them.</td><td>R7 · Q8</td></tr>
+            <tr><td class="id">A6</td><td>External data</td><td>OFAC and EU public sanctions lists are included. Commercial risk, adverse media, registry or screening data is licensed by CICT; Allion integrates it.</td><td>R7 · Q9</td></tr>
+            <tr><td class="id">A7</td><td>Integrations</td><td>The price includes the documented API plus import and export templates. Each named CICT system integration is a priced option once scoped.</td><td>R4 · Q7</td></tr>
+            <tr><td class="id">A8</td><td>Migration</td><td>Phase 1 includes bulk import tooling and migration up to an assumed volume. Larger volumes are priced per batch. OCR quality depends on scan quality.</td><td>R8 · Q6</td></tr>
+            <tr><td class="id">A9</td><td>Translation</td><td>Acceptance runs on the model selected in Discovery, with a terminology database seeded by CICT. Output is a draft for human post-editing.</td><td>R2 · Q10</td></tr>
+            <tr><td class="id">A10</td><td>Masking rules</td><td>CICT defines the final data categories, sensitive-field rules, masking defaults and approval procedures. Allion configures the system to them.</td><td>R6</td></tr>
+            <tr><td class="id">A11</td><td>New build</td><td>The price assumes a new system. Extending or accepting an existing system or LAMS is out of scope beyond importing its data.</td><td>R5 · Q3</td></tr>
+            <tr><td class="id">A12</td><td>Languages</td><td>Interface in English, Chinese and Sinhala; Allion translates interface text and CICT reviews it. Manuals and training in English and Chinese.</td><td>R10 · Q13</td></tr>
+            <tr><td class="id">A13</td><td>Sign-in</td><td>Built-in accounts and sign-in. Single sign-on with a CICT identity provider is a priced option.</td><td>Q11</td></tr>
+            <tr><td class="id">A14</td><td>O&amp;M</td><td>Year 1 covers 24/7 support per our SLA, defect fixes, security patches and minor upgrades. New features and infrastructure or model costs are excluded.</td><td>R9 · Q12</td></tr>
+            <tr><td class="id">A15</td><td>Approvals</td><td>Review and approval workflows are built in. Links to existing CICT approval systems fall under A7.</td><td>R4 · Q7</td></tr>
+            <tr><td class="id">A16</td><td>Regulatory sources</td><td>CICT confirms the official sources. Allion monitors them daily and reports failures; third-party site availability is outside Allion's control.</td><td>R7 · Q8</td></tr>
+            <tr><td class="id">A17</td><td>Source code</td><td>Project code is handed over. Pre-existing Allion components are licensed perpetually to CICT. Position to be confirmed by Rushanthi and Asiri.</td><td>R11 · Q14</td></tr>
+            <tr><td class="id">A18</td><td>Decision support</td><td>AI outputs are drafts. Legal, compliance and approval decisions stay with authorised CICT staff, as the specification already says.</td><td>none</td></tr>
+            <tr><td class="id">A19</td><td>Acceptance plan</td><td>Test conditions, sample sets, checklists and pass marks are agreed per phase in Discovery and signed off before build.</td><td>R1 · Q10</td></tr>
+            <tr><td class="id">A20</td><td>Phase 2 price</td><td>Both phases are fixed prices. The Phase 2 price holds on these assumptions as confirmed in Discovery; material changes go through change control.</td><td>R12 · Q2</td></tr>
+            <tr><td class="id">A21</td><td>Notifications</td><td>In-app and email included. SMS or enterprise chat are priced options.</td><td>Q16</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="matrix">
+      <p class="kicker">Compliance matrix v0.1</p>
+      <h2>Where we comply, and where it depends</h2>
+      <p class="sub">Each of the 272 rows is one requirement from the specification with a suggested response. The responses were AI-drafted on 9 Nov and nobody at Allion has reviewed them yet, so treat these counts as a starting point for review, not our position.</p>
+      <p class="sub"><b>C</b> means we deliver it as written. <b>CA</b> means we deliver it if a listed assumption holds, for example CICT providing the cloud. <b>CL</b> means we can't commit until CICT answers a question. <b>OPT</b> is offered at extra cost.</p>
+      <div class="stats">
+        <div class="stat"><span class="figure">272</span><span>requirement rows</span></div>
+        <div class="stat"><span class="figure">195</span><span>comply as written</span></div>
+        <div class="stat"><span class="figure">74</span><span>depend on an assumption or a CICT answer</span></div>
+        <div class="stat"><span class="figure">3</span><span>offered as priced options</span></div>
+      </div>
+      <div class="chart" id="chart">
+        <ul class="legend" aria-label="Legend">
+          <li><span class="sw c1"></span>Comply (C)</li>
+          <li><span class="sw c2"></span>Comply with assumption (CA)</li>
+          <li><span class="sw c3"></span>Clarify with CICT (CL)</li>
+          <li><span class="sw c4"></span>Priced option (OPT)</li>
+        </ul>
+        <div class="chart-rows" id="chart-rows" role="list"></div>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <details>
+        <summary>Show the counts as a table</summary>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Module</th><th class="num">C</th><th class="num">CA</th><th class="num">CL</th><th class="num">OPT</th><th class="num">Total</th></tr></thead>
+            <tbody id="chart-table"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <section id="questions">
+      <p class="kicker">Open items</p>
+      <h2>Open questions</h2>
+      <h3>For CICT</h3>
+      <p class="sub">Ready to send to Amila Fonseka (CICT procurement) if Rushanthi decides to.</p>
+      <ol class="qs">
+        <li><span class="qid">Q1</span><span><b>Submission.</b> Exact deadline, format and evaluation weighting? Can we have a short clarification meeting?</span></li>
+        <li><span class="qid">Q2</span><span><b>Phasing.</b> We quote each phase at a fixed price. Target go-live dates for each?</span></li>
+        <li><span class="qid">Q3</span><span><b>Existing system.</b> Is there an existing system or pilot? What is LAMS, and is its upgrade in scope?</span></li>
+        <li><span class="qid">Q4</span><span><b>Cloud.</b> Which provider and region? Who provides the environment? On-premise for confidential material?</span></li>
+        <li><span class="qid">Q5</span><span><b>Models.</b> Which providers are approved, for which data? Is self-hosting required? Does CICT pay usage directly?</span></li>
+        <li><span class="qid">Q6</span><span><b>Scale.</b> Registered, daily and concurrent users? Documents per month? Archive size and share of scans?</span></li>
+        <li><span class="qid">Q7</span><span><b>Integrations.</b> Which systems in each phase, and do they have APIs?</span></li>
+        <li><span class="qid">Q8</span><span><b>Content.</b> Will CICT supply the laws, headquarters policies, CMP, templates, checklists and test samples?</span></li>
+        <li><span class="qid">Q9</span><span><b>Data sources.</b> Which public, risk-list and sanctions sources are approved, and are licences in place?</span></li>
+        <li><span class="qid">Q10</span><span><b>Translation.</b> Who scores, and can sample sentences be shared early?</span></li>
+        <li><span class="qid">Q11</span><span><b>Sign-in.</b> Single sign-on through a corporate identity system?</span></li>
+        <li><span class="qid">Q12</span><span><b>O&amp;M.</b> Does year 1 include hosting and model usage, or support and fixes only? On-site presence?</span></li>
+        <li><span class="qid">Q13</span><span><b>Languages.</b> Chinese interface and manuals needed at first go-live?</span></li>
+        <li><span class="qid">Q14</span><span><b>Source code.</b> Full ownership, or is licensing vendor components acceptable?</span></li>
+        <li><span class="qid">Q15</span><span><b>Export control.</b> Which regimes and rule sets, for which business matters?</span></li>
+        <li><span class="qid">Q16</span><span><b>Notifications.</b> Channels beyond in-app and email?</span></li>
+        <li><span class="qid">Q17</span><span><b>Pass mark.</b> Is 4 out of 5 an average, or must every sentence score 4 or more?</span></li>
+        <li><span class="qid">Q18</span><span><b>Support start.</b> Does the year of O&amp;M start at Phase 1 go-live or final acceptance?</span></li>
+        <li><span class="qid">Q19</span><span><b>Translation timing.</b> Legal translation is Phase 2. Is the translation test run at Phase 2 acceptance?</span></li>
+      </ol>
+      <h3>For us</h3>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Question</th><th>Owner</th></tr></thead>
+          <tbody>
+            <tr><td>Bid or no bid?</td><td class="owner">Rushanthi, Asiri</td></tr>
+            <tr><td>Who leads solution architecture and the estimate?</td><td class="owner">To agree</td></tr>
+            <tr><td>Who would build it? The TimeSync team is committed to its release plan through 28 Dec 2026.</td><td class="owner">Rushanthi, Asiri</td></tr>
+            <tr><td>Do we have Chinese-language capability (interface, manuals, training, translation QA) and Sinhala legal reviewers?</td><td class="owner">To agree</td></tr>
+            <tr><td>Which Allion projects can we cite for document AI, RAG or legal work?</td><td class="owner">To agree</td></tr>
+            <tr><td>Build custom, or configure an existing legal AI or contract product and fill the gaps?</td><td class="owner">Architect</td></tr>
+            <tr><td>Our position on source code handover and reusable components</td><td class="owner">Rushanthi, Asiri</td></tr>
+            <tr><td>Who writes which proposal sections?</td><td class="owner">To agree</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="timeline">
+      <p class="kicker">Schedule</p>
+      <h2>Path to 12 Nov</h2>
+      <ol class="days">
+        <li><span class="d">Mon 9 Nov</span><ul><li>Internal discussion: not held yet</li><li>Bid or no-bid: still open</li><li>Questions to Amila: not sent</li><li class="done">Compliance matrix v0.1 drafted</li><li class="done">Proposal draft v0.1 started</li></ul></li>
+        <li class="now"><span class="d">Tue 10 Nov · page date</span><ul><li>Architecture and estimate session</li><li>Translation spot-test on two or three models</li><li class="done">Discussion brief reviewed</li><li class="done">This page shared</li></ul></li>
+        <li><span class="d">Wed 11 Nov</span><ul><li>Proposal draft complete</li><li>Pricing (Rushanthi)</li></ul></li>
+        <li class="due"><span class="d">Thu 12 Nov · due</span><ul><li>Final review</li><li>Submit</li></ul></li>
+      </ol>
+      <p class="sub">With two days left, CICT's answers are unlikely to arrive before submission, so the proposal relies on assumptions A1 to A21 and lists the open points as clarifications.</p>
+    </section>
+
+    <section id="files">
+      <p class="kicker">Sources</p>
+      <h2>Working files</h2>
+      <ul class="files">
+        <li><a href="prototype.html">Clickable prototype</a><span class="ver">v0.1 · concept mock</span><span class="desc">Both phases with a Phase 1 / Phase 1 + 2 switch. Start with "Ask the assistant" for the six-step review flow. Made-up sample data only.</span></li>
+        <li><a href="https://claude.ai/artifact/DsUGbcwXzDPjj6gKM8YJuG">Proposal draft</a><span class="ver">v0.1 · Claude Doc</span><span class="desc">The client-facing proposal: summary, understanding, solution, delivery plan, acceptance, SLA, assumptions, client-facing risks and commercial structure with prices blank. Opens once Mishal shares it with you.</span></li>
+        <li><span>Compliance matrix</span><span class="ver">v0.1 · Excel</span><span class="desc">272 rows with AI-drafted responses, not yet reviewed, plus tabs for the summary, assumptions, CICT questions and risks. Ask Mishal for a copy.</span></li>
+        <li><span>Discussion brief</span><span class="ver">v0.2 · Markdown</span><span class="desc">The internal reading behind this page: scope, risks, bid options, questions and a build sketch for the architect to challenge. Ask Mishal for a copy.</span></li>
+        <li><span>CICT requirements specification</span><span class="ver">PDF · 45 sections</span><span class="desc">The source document. Section numbers on this page refer to it.</span></li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Prepared by Mishal Chowdhury, BA / PM, for the CICT bid team.</span>
+    <span>Drafted with AI help from CICT's specification and still under review. Nothing on this page has been sent to CICT.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var data = [
+    ["Platform and AI foundation", "Both phases", 57, 30, 3, 1],
+    ["Contract management", "Phase 1", 32, 6, 2, 0],
+    ["Records management", "Phase 1", 16, 2, 0, 0],
+    ["Common support", "Phase 1", 17, 1, 0, 0],
+    ["Legal affairs", "Phase 2", 13, 6, 0, 0],
+    ["Policy management", "Phase 2", 18, 1, 0, 1],
+    ["Compliance and risk control", "Phase 2", 19, 6, 1, 1],
+    ["Board affairs", "Phase 2", 6, 2, 0, 0],
+    ["Phasing, delivery and acceptance", "Both phases", 13, 11, 1, 0],
+    ["After-sales support", "Year 1", 4, 2, 0, 0]
+  ];
+  var names = ["Comply", "Comply with assumption", "Clarify with CICT", "Priced option"];
+  var rows = document.getElementById("chart-rows");
+  var table = document.getElementById("chart-table");
+  var chart = document.getElementById("chart");
+  var tip = document.getElementById("tip");
+  if (!rows || !table) return;
+  var max = 0;
+  data.forEach(function (d) { var t = d[2] + d[3] + d[4] + d[5]; if (t > max) max = t; });
+  var totals = [0, 0, 0, 0];
+
+  data.forEach(function (d) {
+    var counts = d.slice(2);
+    var total = counts.reduce(function (a, b) { return a + b; }, 0);
+    var row = document.createElement("div");
+    row.className = "crow";
+    row.setAttribute("role", "listitem");
+    var lab = document.createElement("div");
+    lab.className = "lab";
+    lab.textContent = d[0];
+    var small = document.createElement("small");
+    small.textContent = d[1];
+    lab.appendChild(small);
+    var track = document.createElement("div");
+    track.className = "track";
+    var stack = document.createElement("div");
+    stack.className = "stack";
+    stack.style.width = "calc((100% - 8.5rem) * " + (total / max).toFixed(4) + ")";
+    counts.forEach(function (n, i) {
+      totals[i] += n;
+      if (!n) return;
+      var seg = document.createElement("span");
+      seg.className = "seg c" + (i + 1);
+      seg.style.flex = n + " 1 0";
+      seg.tabIndex = 0;
+      var label = d[0] + ": " + names[i] + ", " + n + (n === 1 ? " row" : " rows");
+      seg.setAttribute("role", "img");
+      seg.setAttribute("aria-label", label);
+      seg.dataset.tip = label;
+      stack.appendChild(seg);
+    });
+    var tot = document.createElement("span");
+    tot.className = "tot";
+    var needs = counts[1] + counts[2];
+    tot.textContent = total + " rows" + (needs ? " · " + needs + " depend" : "");
+    track.appendChild(stack);
+    track.appendChild(tot);
+    row.appendChild(lab);
+    row.appendChild(track);
+    rows.appendChild(row);
+
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td></td>" + counts.map(function (n) { return '<td class="num">' + n + "</td>"; }).join("") + '<td class="num">' + total + "</td>";
+    tr.firstChild.textContent = d[0];
+    table.appendChild(tr);
+  });
+  var trT = document.createElement("tr");
+  trT.innerHTML = "<td><b>Total</b></td>" + totals.map(function (n) { return '<td class="num"><b>' + n + "</b></td>"; }).join("") + '<td class="num"><b>' + totals.reduce(function (a, b) { return a + b; }, 0) + "</b></td>";
+  table.appendChild(trT);
+
+  function show(e) {
+    var t = e.target;
+    if (!t.dataset || !t.dataset.tip || !tip) return;
+    var cr = chart.getBoundingClientRect();
+    var sr = t.getBoundingClientRect();
+    tip.textContent = t.dataset.tip;
+    tip.hidden = false;
+    var x = sr.left + sr.width / 2 - cr.left;
+    var half = tip.offsetWidth / 2;
+    x = Math.max(half + 4, Math.min(cr.width - half - 4, x));
+    tip.style.left = x + "px";
+    tip.style.top = (sr.top - cr.top) + "px";
+  }
+  function hide() { if (tip) tip.hidden = true; }
+  rows.addEventListener("mouseover", show);
+  rows.addEventListener("focusin", show);
+  rows.addEventListener("mouseout", hide);
+  rows.addEventListener("focusout", hide);
+
+  // Highlight the current section in the side index
+  try {
+    var links = Array.prototype.slice.call(document.querySelectorAll("#toc a"));
+    var byId = {};
+    links.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          links.forEach(function (a) { a.removeAttribute("aria-current"); });
+          var a = byId[en.target.id];
+          if (a) a.setAttribute("aria-current", "true");
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    Object.keys(byId).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  } catch (err) { /* index highlight is optional */ }
+})();
+</script>
+
+</body>
+</html>

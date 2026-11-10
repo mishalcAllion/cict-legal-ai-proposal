@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CICT Proposal Pages</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,600..800&family=Public+Sans:wght@400;600&display=swap">
+<style>
+:root { --bg:#f2f5f6; --surface:#fbfcfc; --ink:#12202a; --ink-2:#44535f; --line:#d6dde2; --accent:#0e5d78; --mast:#10303d; --mast-ink:#e6f0f3; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0d1418; --surface:#141e24; --ink:#e4ebee; --ink-2:#a8b5bd; --line:#26343d; --accent:#63b4d2; --mast:#0f242d; --mast-ink:#e4ebee; color-scheme: dark; } }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:"Public Sans",system-ui,sans-serif; line-height:1.55; }
+.wrap { max-width:56rem; margin:0 auto; padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); }
+header { background:var(--mast); color:var(--mast-ink); }
+header .wrap { padding-block:36px 28px; display:grid; gap:10px; }
+h1 { font-family:"Archivo","Arial Narrow",sans-serif; font-stretch:82%; font-weight:760; font-size:clamp(1.7rem,1.2rem + 2vw,2.5rem); line-height:1.05; margin:0; }
+header p { margin:0; max-width:60ch; opacity:.9; }
+main .wrap { padding-block:28px 48px; display:grid; gap:14px; }
+a.card { display:grid; gap:4px; background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:16px 18px; color:var(--ink); text-decoration:none; }
+a.card:hover { border-color:var(--accent); }
+a.card b { font-size:1.1rem; color:var(--accent); }
+a.card span { color:var(--ink-2); }
+.note { color:var(--ink-2); font-size:.9rem; }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>CICT Legal &amp; Compliance AI Assistant</h1>
+<p>Allion Technologies' working pages for CICT RFQ 114367. Concept material for discussion; all names, documents and figures in the prototype are made-up samples.</p>
+</div></header>
+<main><div class="wrap">
+<a class="card" href="prototype.html"><b>Clickable prototype</b><span>Both phases with a Phase 1 / Phase 1 + 2 switch. Start with "Ask the assistant" for the six-step review flow.</span></a>
+<a class="card" href="briefing.html"><b>Team briefing</b><span>What we understood from the specification: scope by phase, diagrams, acceptance, risks, assumptions and open questions.</span></a>
+<p class="note">AI-assisted drafts, still under review. Not a commitment or an offer.</p>
+</div></main>
+</body>
+</html>

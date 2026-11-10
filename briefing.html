@@ -34,6 +34,7 @@
   --c2: #eb6834;
   --c3: #1baf7a;
   --c4: #eda100;
+  --c5: #e87ba4;
   --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
@@ -66,6 +67,7 @@
     --c2: #d95926;
     --c3: #199e70;
     --c4: #c98500;
+    --c5: #d55181;
     color-scheme: dark;
   }
 }
@@ -90,6 +92,7 @@
   --c2: #d95926;
   --c3: #199e70;
   --c4: #c98500;
+  --c5: #d55181;
   color-scheme: dark;
 }
 
@@ -317,7 +320,7 @@ td .ref { display: block; margin-top: 2px; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; margin: 0; padding: 0; font-size: 0.86rem; color: var(--ink-2); }
 .legend li { display: inline-flex; align-items: center; gap: 8px; }
 .sw { width: 12px; height: 12px; border-radius: 3px; flex: none; }
-.sw.c1 { background: var(--c1); } .sw.c2 { background: var(--c2); } .sw.c3 { background: var(--c3); } .sw.c4 { background: var(--c4); }
+.sw.c1 { background: var(--c1); } .sw.c2 { background: var(--c2); } .sw.c3 { background: var(--c3); } .sw.c4 { background: var(--c4); } .sw.c5 { background: var(--c5); }
 .chart { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 14px; position: relative; }
 .chart-rows { display: grid; gap: 10px; }
 .crow { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: 12px; align-items: center; }
@@ -327,7 +330,7 @@ td .ref { display: block; margin-top: 2px; }
 .stack { display: flex; gap: 2px; height: 18px; flex: none; }
 .seg { height: 100%; min-width: 3px; cursor: default; }
 .seg:last-child { border-radius: 0 4px 4px 0; }
-.seg.c1 { background: var(--c1); } .seg.c2 { background: var(--c2); } .seg.c3 { background: var(--c3); } .seg.c4 { background: var(--c4); }
+.seg.c1 { background: var(--c1); } .seg.c2 { background: var(--c2); } .seg.c3 { background: var(--c3); } .seg.c4 { background: var(--c4); } .seg.c5 { background: var(--c5); }
 .seg:hover, .seg:focus-visible { filter: brightness(1.12); }
 .tot { font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.2; color: var(--ink-2); font-variant-numeric: tabular-nums; min-width: 0; }
 @media (max-width: 600px) {
@@ -965,7 +968,7 @@ footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(-
     <section id="assumptions">
       <p class="kicker">Price basis · A1 to A21</p>
       <h2>Assumptions that hold the price</h2>
-      <p class="sub">Draft wording from the compliance matrix, AI-drafted and not yet reviewed. These are what make a fixed price possible, so they belong in the proposal.</p>
+      <p class="sub">Draft wording from the compliance matrix. These are what make a fixed price possible, so they belong in the proposal. A4 and A8 were reworked on 10 Nov; A1, A2, A3, A7, A13, A14, A17 and A21 are with Rushanthi and Asiri for sign-off.</p>
       <div class="scroll">
         <table class="assume">
           <thead><tr><th>ID</th><th>Topic</th><th>Assumption</th><th>Links</th></tr></thead>
@@ -973,11 +976,11 @@ footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(-
             <tr><td class="id">A1</td><td>Hosting</td><td>Deployed in a cloud environment CICT provides or approves. Cloud cost is pass-through, outside the fixed price. Allion sets up and runs the application there.</td><td>R3 · Q4</td></tr>
             <tr><td class="id">A2</td><td>Model usage</td><td>Model API fees, or GPU hosting for self-hosted models, are pass-through on actuals or a capped allowance.</td><td>R3 · Q5</td></tr>
             <tr><td class="id">A3</td><td>Model set</td><td>The gateway can take any provider with an API. The price covers integrating and validating up to three models agreed in Discovery. More are a priced option.</td><td>R3 · Q5</td></tr>
-            <tr><td class="id">A4</td><td>Performance metrics</td><td>The proposal states assumed values for users, document sizes, response times, availability, backup and recovery. Discovery confirms them; changes go through change control.</td><td>R1 · Q6</td></tr>
+            <tr><td class="id">A4</td><td>Performance metrics</td><td>The proposal states assumed volumes and targets in a sizing table (below): users, concurrent tasks, file and import sizes, archive volume, response times, availability, backup and recovery. Discovery confirms them; changes go through change control.</td><td>R1 · Q6</td></tr>
             <tr><td class="id">A5</td><td>CICT content</td><td>CICT supplies and keeps current the laws, headquarters policies, CMP, Articles, internal policies, templates, checklists, terminology, related-party lists, case data and sample sets. Allion loads and configures them.</td><td>R7 · Q8</td></tr>
             <tr><td class="id">A6</td><td>External data</td><td>OFAC and EU public sanctions lists are included. Commercial risk, adverse media, registry or screening data is licensed by CICT; Allion integrates it.</td><td>R7 · Q9</td></tr>
             <tr><td class="id">A7</td><td>Integrations</td><td>The price includes the documented API plus import and export templates. Each named CICT system integration is a priced option once scoped.</td><td>R4 · Q7</td></tr>
-            <tr><td class="id">A8</td><td>Migration</td><td>Phase 1 includes bulk import tooling and migration up to an assumed volume. Larger volumes are priced per batch. OCR quality depends on scan quality.</td><td>R8 · Q6</td></tr>
+            <tr><td class="id">A8</td><td>Migration</td><td>Phase 1 includes bulk import tooling and migration up to the archive volume in the sizing table. Larger volumes are priced per batch. OCR quality depends on scan quality.</td><td>R8 · Q6</td></tr>
             <tr><td class="id">A9</td><td>Translation</td><td>Acceptance runs on the model selected in Discovery, with a terminology database seeded by CICT. Output is a draft for human post-editing.</td><td>R2 · Q10</td></tr>
             <tr><td class="id">A10</td><td>Masking rules</td><td>CICT defines the final data categories, sensitive-field rules, masking defaults and approval procedures. Allion configures the system to them.</td><td>R6</td></tr>
             <tr><td class="id">A11</td><td>New build</td><td>The price assumes a new system. Extending or accepting an existing system or LAMS is out of scope beyond importing its data.</td><td>R5 · Q3</td></tr>
@@ -994,18 +997,42 @@ footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(-
           </tbody>
         </table>
       </div>
+      <h3>Sizing basis for the fixed price</h3>
+      <p class="sub">Suggested starting values for A4 and A8, drafted with AI on 10 Nov. The architect and Rushanthi confirm or change them before submission; the proposal shows them in [brackets] until then.</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Area</th><th>Measure</th><th>Suggested value</th></tr></thead>
+          <tbody>
+            <tr><td>Users</td><td>Registered users</td><td>150</td></tr>
+            <tr><td>Users</td><td>Daily active users</td><td>40</td></tr>
+            <tr><td>Users</td><td>Analysis tasks running at the same time</td><td>10</td></tr>
+            <tr><td>Documents</td><td>Largest single file</td><td>300 pages or 50 MB</td></tr>
+            <tr><td>Documents</td><td>Bulk import per batch</td><td>5,000 files</td></tr>
+            <tr><td>Documents</td><td>Historical archive imported in Phase 1</td><td>100,000 pages, up to 40% scanned</td></tr>
+            <tr><td>Documents</td><td>Growth per year</td><td>20,000 pages</td></tr>
+            <tr><td>Response times</td><td>Search and questions</td><td>Under 10 seconds for 90% of requests</td></tr>
+            <tr><td>Response times</td><td>Contract review, up to 50 pages</td><td>Under 5 minutes</td></tr>
+            <tr><td>Response times</td><td>Translation</td><td>Under 2 minutes per 10 pages</td></tr>
+            <tr><td>Response times</td><td>Report generation</td><td>Under 3 minutes</td></tr>
+            <tr><td>Running the service</td><td>Availability</td><td>99.5% a month, excluding announced maintenance</td></tr>
+            <tr><td>Running the service</td><td>Backups</td><td>Daily full backup, database logs every hour</td></tr>
+            <tr><td>Running the service</td><td>Acceptable data loss</td><td>Up to 1 hour</td></tr>
+            <tr><td>Running the service</td><td>Recovery time</td><td>Up to 8 hours</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="matrix">
       <p class="kicker">Compliance matrix v0.1</p>
       <h2>Where we comply, and where it depends</h2>
-      <p class="sub">Each of the 272 rows is one requirement from the specification with a suggested response. The responses were AI-drafted on 9 Nov and nobody at Allion has reviewed them yet, so treat these counts as a starting point for review, not our position.</p>
-      <p class="sub"><b>C</b> means we deliver it as written. <b>CA</b> means we deliver it if a listed assumption holds, for example CICT providing the cloud. <b>CL</b> means we can't commit until CICT answers a question. <b>OPT</b> is offered at extra cost.</p>
+      <p class="sub">Each of the 272 rows is one requirement from the specification with a suggested response. The responses were AI-drafted on 9 Nov. Mishal reviewed the open rows on 10 Nov and changed 8 of them; the commercial assumptions are with Rushanthi and Asiri, and the C rows are not yet reviewed.</p>
+      <p class="sub"><b>C</b> means we deliver it as written. <b>CA</b> means we deliver it if a listed assumption holds, for example CICT providing the cloud. <b>CL</b> means we can't commit until CICT answers a question. <b>OPT</b> is offered at extra cost. <b>P</b> means part is included and the rest is optional.</p>
       <div class="stats">
         <div class="stat"><span class="figure">272</span><span>requirement rows</span></div>
-        <div class="stat"><span class="figure">195</span><span>comply as written</span></div>
-        <div class="stat"><span class="figure">74</span><span>depend on an assumption or a CICT answer</span></div>
-        <div class="stat"><span class="figure">3</span><span>offered as priced options</span></div>
+        <div class="stat"><span class="figure">196</span><span>comply as written</span></div>
+        <div class="stat"><span class="figure">73</span><span>depend on an assumption or a CICT answer</span></div>
+        <div class="stat"><span class="figure">3</span><span>partly included or priced as options</span></div>
       </div>
       <div class="chart" id="chart">
         <ul class="legend" aria-label="Legend">
@@ -1013,6 +1040,7 @@ footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(-
           <li><span class="sw c2"></span>Comply with assumption (CA)</li>
           <li><span class="sw c3"></span>Clarify with CICT (CL)</li>
           <li><span class="sw c4"></span>Priced option (OPT)</li>
+          <li><span class="sw c5"></span>Partly included (P)</li>
         </ul>
         <div class="chart-rows" id="chart-rows" role="list"></div>
         <div class="tip" id="tip" hidden></div>
@@ -1021,7 +1049,7 @@ footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(-
         <summary>Show the counts as a table</summary>
         <div class="scroll">
           <table>
-            <thead><tr><th>Module</th><th class="num">C</th><th class="num">CA</th><th class="num">CL</th><th class="num">OPT</th><th class="num">Total</th></tr></thead>
+            <thead><tr><th>Module</th><th class="num">C</th><th class="num">CA</th><th class="num">CL</th><th class="num">OPT</th><th class="num">P</th><th class="num">Total</th></tr></thead>
             <tbody id="chart-table"></tbody>
           </table>
         </div>
@@ -1108,26 +1136,26 @@ footer .wrap { padding-block: 24px 40px; font-size: var(--step--1); color: var(-
 <script>
 (function () {
   var data = [
-    ["Platform and AI foundation", "Both phases", 57, 30, 3, 1],
-    ["Contract management", "Phase 1", 32, 6, 2, 0],
-    ["Records management", "Phase 1", 16, 2, 0, 0],
-    ["Common support", "Phase 1", 17, 1, 0, 0],
-    ["Legal affairs", "Phase 2", 13, 6, 0, 0],
-    ["Policy management", "Phase 2", 18, 1, 0, 1],
-    ["Compliance and risk control", "Phase 2", 19, 6, 1, 1],
-    ["Board affairs", "Phase 2", 6, 2, 0, 0],
-    ["Phasing, delivery and acceptance", "Both phases", 13, 11, 1, 0],
-    ["After-sales support", "Year 1", 4, 2, 0, 0]
+    ["Platform and AI foundation", "Both phases", 58, 32, 0, 1, 0],
+    ["Contract management", "Phase 1", 32, 8, 0, 0, 0],
+    ["Records management", "Phase 1", 16, 2, 0, 0, 0],
+    ["Common support", "Phase 1", 17, 1, 0, 0, 0],
+    ["Legal affairs", "Phase 2", 13, 6, 0, 0, 0],
+    ["Policy management", "Phase 2", 18, 1, 0, 1, 0],
+    ["Compliance and risk control", "Phase 2", 19, 6, 1, 0, 1],
+    ["Board affairs", "Phase 2", 6, 2, 0, 0, 0],
+    ["Phasing, delivery and acceptance", "Both phases", 13, 11, 1, 0, 0],
+    ["After-sales support", "Year 1", 4, 2, 0, 0, 0]
   ];
-  var names = ["Comply", "Comply with assumption", "Clarify with CICT", "Priced option"];
+  var names = ["Comply", "Comply with assumption", "Clarify with CICT", "Priced option", "Partly included"];
   var rows = document.getElementById("chart-rows");
   var table = document.getElementById("chart-table");
   var chart = document.getElementById("chart");
   var tip = document.getElementById("tip");
   if (!rows || !table) return;
   var max = 0;
-  data.forEach(function (d) { var t = d[2] + d[3] + d[4] + d[5]; if (t > max) max = t; });
-  var totals = [0, 0, 0, 0];
+  data.forEach(function (d) { var t = d.slice(2).reduce(function (a, b) { return a + b; }, 0); if (t > max) max = t; });
+  var totals = [0, 0, 0, 0, 0];
 
   data.forEach(function (d) {
     var counts = d.slice(2);

@@ -7,7 +7,7 @@ Working pages from Allion Technologies for CICT RFQ 114367 (Legal & Safety Compl
 | [Clickable prototype](prototype.html) | Concept mock of both delivery phases, with a Phase 1 / Phase 1 + 2 switch. Start with "Ask the assistant" for the six-step review flow. |
 | [Team briefing](briefing.html) | What we understood from the specification: scope by phase, diagrams, acceptance, risks, assumptions and open questions. |
 
-All names, documents and figures in the prototype are made-up samples. Both pages are AI-assisted drafts under review, not a commitment or an offer.
+All names, documents and figures in the prototype are made-up samples. This public copy leaves out the text of CICT's requirements specification, so the prototype's § links show a short note instead of the section. Both pages are AI-assisted drafts under review, not a commitment or an offer.
 
 ## How these files are made
 

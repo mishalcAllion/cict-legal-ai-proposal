@@ -245,6 +245,29 @@ ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
 .locked ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; color: var(--ink-2); }
 .walk { margin: 0; padding-left: 1.3rem; display: grid; gap: 6px; font-size: 0.9rem; }
 
+/* SOW references and drawer */
+button.sowref { font: inherit; border: 0; background: var(--accent-soft); color: var(--accent); border-radius: 4px; padding: 0 5px; margin: 0 1px; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px; }
+button.sowref:hover { text-decoration-style: solid; }
+.scrim { position: fixed; inset: 0; z-index: 30; background: rgba(6, 14, 18, 0.38); }
+.drawer { position: fixed; z-index: 31; top: 0; right: 0; bottom: 0; width: min(34rem, 100vw); background: var(--surface); border-left: 1px solid var(--line); box-shadow: -12px 0 32px rgba(0, 0, 0, 0.2); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+@media (prefers-reduced-motion: no-preference) { .drawer:not([hidden]) { animation: slidein 0.2s ease-out; } }
+@keyframes slidein { from { transform: translateX(28px); } to { transform: none; } }
+.drawer[hidden], .scrim[hidden] { display: none; }
+.drawer-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px 18px 12px; border-bottom: 1px solid var(--line); }
+.drawer-h .k { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+.drawer-h h2 { margin: 3px 0 0; font-family: var(--font-display); font-stretch: 88%; font-weight: 720; font-size: 1.2rem; line-height: 1.2; text-wrap: balance; }
+.drawer-b { overflow-y: auto; padding: 14px 18px 22px; display: grid; gap: 10px; align-content: start; font-family: Georgia, "Times New Roman", serif; font-size: 0.95rem; line-height: 1.62; }
+.drawer-b h3 { font-family: var(--font-body); font-size: 0.95rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.drawer-b ol, .drawer-b ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 6px; }
+.drawer-b .hl { background: var(--mark); border-radius: 4px; outline: 4px solid var(--mark); }
+.drawer-b table { font-family: var(--font-body); font-size: 0.84rem; line-height: 1.45; }
+.drawer-b .idx { list-style: none; padding: 0; gap: 2px; font-family: var(--font-body); }
+.drawer-b .idx button { width: 100%; text-align: left; border: 0; background: transparent; padding: 6px 8px; border-radius: 4px; color: var(--ink); }
+.drawer-b .idx button:hover { background: var(--accent-soft); }
+.drawer-b .idx .mono { color: var(--accent); margin-right: 6px; }
+.drawer-b .chap { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 6px; }
+.drawer-f { padding: 10px 18px; border-top: 1px solid var(--line); font-size: 0.76rem; color: var(--muted); }
+
 .toast { position: fixed; z-index: 20; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: var(--radius); font-size: 0.88rem; max-width: min(92vw, 34rem); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25); }
 </style>
 
@@ -257,7 +280,14 @@ ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="scrim" id="scrim" data-act="sow-close" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+  <div class="drawer-h"><div><div class="k">CICT requirements specification</div><h2 id="drawer-title"></h2></div><button class="btn" id="drawer-close" data-act="sow-close">Close</button></div>
+  <div class="drawer-b" id="drawer-body"></div>
+  <div class="drawer-f">Word for word from CICT's requirements specification (English text as received). Line breaks and table layout rebuilt from the PDF.</div>
+</aside>
 
+<script type="application/json" id="sow-data">{}</script>
 <script>
 (function () {
   "use strict";
@@ -382,6 +412,7 @@ ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
       '<li><a href="#assistant">Ask the assistant</a>: the six-step flow every task follows. Start here.</li>' +
       '<li><a href="#contracts">Contracts</a> and <a href="#records">Records</a>: the two Phase 1 modules.</li>' +
       '<li><a href="#admin">Administration</a>: model choice, health, audit logs.</li>' +
+      '<li>Click any <b>§</b> reference to read that part of CICT\'s specification, word for word.</li>' +
       '<li>Switch to <b>Phase 1 + 2</b> at the top, then open <a href="#legal">Legal affairs</a>, <a href="#policy">Policies</a>, <a href="#compliance">Compliance</a> and <a href="#board">Board affairs</a>.</li>' +
       '</ol><div class="btns"><button class="btn primary" data-act="start">Start the review flow</button></div></section>' +
       '<section class="card"><h2 class="h">Notifications</h2><ul class="list">' + notes.map(function (n) {
@@ -880,6 +911,86 @@ ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
 
   var PAGES = { workspace: pageWorkspace, assistant: pageAssistant, knowledge: pageKnowledge, admin: pageAdmin, contracts: pageContracts, records: pageRecords, legal: pageLegal, policy: pagePolicy, compliance: pageCompliance, board: pageBoard };
 
+  /* ---------- SOW references and drawer ---------- */
+  var SOW = {};
+  try { SOW = JSON.parse(document.getElementById("sow-data").textContent || "{}"); } catch (err) { SOW = {}; }
+  var drawer = document.getElementById("drawer"), scrim = document.getElementById("scrim"), drawerBody = document.getElementById("drawer-body"), drawerTitle = document.getElementById("drawer-title");
+  var lastOpener = null;
+  function sowKey(tok) { if (tok.indexOf("Ch") === 0) return "ch12"; if (tok === "Intro") return "intro"; return tok.replace(/^§\s?/, ""); }
+  function linkRefs(root) {
+    root.querySelectorAll(".ref").forEach(function (el) {
+      if (el.getAttribute("data-linked")) return;
+      el.innerHTML = el.textContent.replace(/§\s?\d+(?:\.\d+)*|Ch 1–2|Intro/g, function (t) {
+        return '<button type="button" class="sowref" data-act="sow" data-sec="' + sowKey(t) + '" title="Read ' + t + ' in the SOW">' + t + "</button>";
+      });
+      el.setAttribute("data-linked", "1");
+    });
+  }
+  function blocksHtml(body, hl) {
+    var out = "", i = 0;
+    while (i < body.length) {
+      var b = body[i];
+      if (b[0] === "li" || b[0] === "bl") {
+        var kind = b[0], tag = kind === "li" ? "ol" : "ul", items = "";
+        while (i < body.length && body[i][0] === kind) {
+          var it = body[i];
+          items += kind === "li" ? '<li value="' + it[1] + '"' + (hl && hl === it[1] ? ' class="hl"' : "") + ">" + esc(it[2]) + "</li>" : "<li>" + esc(it[1]) + "</li>";
+          i++;
+        }
+        out += "<" + tag + ">" + items + "</" + tag + ">";
+        continue;
+      }
+      if (b[0] === "table") {
+        out += '<div class="scroll"><table><thead><tr>' + b[1][0].map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+          b[1].slice(1).map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + esc(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
+      } else {
+        out += "<p>" + esc(b[1]) + "</p>";
+      }
+      i++;
+    }
+    return out;
+  }
+  function sowContent(key) {
+    if (!SOW.s) return { title: "§" + key, html: '<p class="small">The specification text isn\'t included in this copy. See section ' + esc(key) + " of CICT's requirements specification.</p>" };
+    if (key === "ch12") {
+      var list = '<ul class="idx">';
+      SOW.order.forEach(function (k) {
+        if (k === "ch1" || k === "ch2") { list += '<li class="chap">' + esc(SOW.s[k].title) + "</li>"; return; }
+        if (/^[12]\./.test(k)) list += '<li><button data-act="sow" data-sec="' + k + '"><span class="mono">' + k + "</span>" + esc(SOW.s[k].title) + "</button></li>";
+      });
+      return { title: "Chapters 1 and 2", html: list + "</ul>" };
+    }
+    var hl = null, k = key;
+    if (!SOW.s[k]) {
+      var parts = key.split("."), last = parts.pop(), parent = parts.join(".");
+      if (SOW.s[parent]) { k = parent; hl = last; }
+    }
+    var s = SOW.s[k];
+    if (!s) return { title: "§" + key, html: '<p class="small">Section ' + esc(key) + " was not found in the specification.</p>" };
+    var html = blocksHtml(s.body, hl);
+    SOW.order.forEach(function (c) {
+      if (c.indexOf(k + ".") === 0) html += "<h3>" + c + " " + esc(SOW.s[c].title) + "</h3>" + blocksHtml(SOW.s[c].body, null);
+    });
+    return { title: (k === "intro" ? "" : "§" + k + " ") + s.title, html: html };
+  }
+  function openSow(key, opener) {
+    var c = sowContent(key);
+    drawerTitle.textContent = c.title;
+    drawerBody.innerHTML = c.html;
+    drawerBody.scrollTop = 0;
+    if (drawer.hidden) lastOpener = opener || null;
+    drawer.hidden = false; scrim.hidden = false;
+    var h = drawerBody.querySelector(".hl");
+    if (h) h.scrollIntoView({ block: "center" });
+    document.getElementById("drawer-close").focus();
+  }
+  function closeSow() {
+    drawer.hidden = true; scrim.hidden = true;
+    if (lastOpener && document.body.contains(lastOpener)) lastOpener.focus();
+    lastOpener = null;
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !drawer.hidden) closeSow(); });
+
   /* ---------- render and events ---------- */
   var side = document.getElementById("side"), top = document.getElementById("top"), view = document.getElementById("view"), toastEl = document.getElementById("toast");
   function render() {
@@ -887,6 +998,7 @@ ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
     side.innerHTML = renderSide();
     top.innerHTML = renderTop();
     view.innerHTML = r.phase === 2 && !p2on() ? pageLocked(r) : PAGES[r.id](r);
+    linkRefs(view);
   }
   var toastTimer = null;
   function toast(msg) {
@@ -921,6 +1033,8 @@ ins { color: var(--good); background: var(--good-soft); text-decoration: none; }
     var el = e.target.closest("[data-act]");
     if (!el || el.disabled) return;
     var act = el.getAttribute("data-act"), v = el.getAttribute("data-v"), w = state.wiz;
+    if (act === "sow") { openSow(el.getAttribute("data-sec"), el); return; }
+    if (act === "sow-close") { closeSow(); return; }
     if (act === "phase") {
       state.phase = v;
       try { localStorage.setItem("cict-mock-phase", v); } catch (err) {}

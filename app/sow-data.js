@@ -1,0 +1,1 @@
+window.SOW_DATA = {};
